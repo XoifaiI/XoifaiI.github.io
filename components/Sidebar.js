@@ -1,21 +1,19 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import styles from './Sidebar.module.css';
 
-const Sidebar = memo(({ sections, activeSection }) => {
-  const handleNavClick = useCallback((e, href) => {
-    e.preventDefault();
-    console.log('Clicked href:', href);
-    console.log('Current activeSection:', activeSection);
-    console.log('Comparison result:', activeSection === href.slice(1));
-    
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [activeSection]);
+const Sidebar = memo(({ 
+  sections, 
+  activeSection, 
+  onNavClick,  // 👈 Navigation handler from useScrollManager
+  isMobileMenuOpen 
+}) => {
+  console.log('🎯 Sidebar render - activeSection:', activeSection);
 
   return (
-    <aside className={styles.sidebar} id="sidebar">
+    <aside 
+      className={`${styles.sidebar} ${isMobileMenuOpen ? styles.mobileOpen : ''}`} 
+      id="sidebar"
+    >
       {sections.map((section, index) => (
         <div key={index} className={styles.sidebarSection}>
           <div className={styles.sectionHeader}>{section.title}</div>
@@ -23,16 +21,17 @@ const Sidebar = memo(({ sections, activeSection }) => {
           <nav className={styles.sidebarNav}>
             {section.items.map((item) => {
               const isActive = activeSection === item.href.slice(1);
-              console.log(`Item: ${item.label}, href: ${item.href}, activeSection: ${activeSection}, isActive: ${isActive}`);
+              console.log(`📋 Sidebar Item: ${item.label}, href: ${item.href}, activeSection: ${activeSection}, isActive: ${isActive}`);
               
               return (
                 <a
                   key={item.href}
                   href={item.href}
                   className={`${styles.navLink} ${isActive ? styles.active : ''}`}
-                  onClick={(e) => handleNavClick(e, item.href)}
+                  onClick={(e) => onNavClick(e, item.href)}
+                  aria-current={isActive ? 'page' : undefined}
                 >
-                  {item.icon && <i className={`${styles.navIcon} ${item.icon}`}></i>}
+                  {item.icon && <i className={`${styles.navIcon} ${item.icon}`} aria-hidden="true"></i>}
                   {item.label}
                 </a>
               );
