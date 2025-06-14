@@ -1,10 +1,9 @@
-// Enhanced Scroll Manager - Dynamic lighting and smooth progress
+// Simple Scroll Manager - Fixed header/sidebar + progress bar
 // Create this file as: utils/scrollManager.js
 
 class ScrollManager {
   constructor() {
     this.isNavigating = false;
-    this.scrollTimeout = null;
     this.init();
   }
 
@@ -12,7 +11,6 @@ class ScrollManager {
     this.setupSmoothScroll();
     this.setupScrollProgress();
     this.setupHeaderEffects();
-    this.setupDynamicLighting();
     this.preventScrollConflicts();
   }
 
@@ -30,18 +28,17 @@ class ScrollManager {
         if (targetElement) {
           this.isNavigating = true;
           
-          // Add smooth scroll class temporarily
-          document.documentElement.classList.add('smooth-scroll');
+          // Scroll to element with offset for fixed header
+          const headerHeight = 70;
+          const elementTop = targetElement.offsetTop - headerHeight;
           
-          // Scroll to element
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
+          window.scrollTo({
+            top: elementTop,
+            behavior: 'smooth'
           });
           
-          // Remove smooth scroll class after navigation
+          // Reset navigation flag
           setTimeout(() => {
-            document.documentElement.classList.remove('smooth-scroll');
             this.isNavigating = false;
           }, 1000);
           
@@ -54,7 +51,7 @@ class ScrollManager {
     });
   }
 
-  // Enhanced scroll progress with smooth updates
+  // Setup scroll progress bar
   setupScrollProgress() {
     let ticking = false;
     
@@ -83,7 +80,8 @@ class ScrollManager {
   // Setup header scroll effects
   setupHeaderEffects() {
     const header = document.querySelector('.header');
-    let lastScrollY = window.pageYOffset;
+    if (!header) return;
+    
     let ticking = false;
 
     const updateHeader = () => {
@@ -91,12 +89,11 @@ class ScrollManager {
       
       // Add scrolled class when scrolled down
       if (currentScrollY > 50) {
-        header?.classList.add('scrolled');
+        header.classList.add('scrolled');
       } else {
-        header?.classList.remove('scrolled');
+        header.classList.remove('scrolled');
       }
       
-      lastScrollY = currentScrollY;
       ticking = false;
     };
     
@@ -106,63 +103,6 @@ class ScrollManager {
         ticking = true;
       }
     }, { passive: true });
-  }
-
-  // Setup dynamic lighting effects
-  setupDynamicLighting() {
-    let animationId;
-    let time = 0;
-    
-    const updateLighting = () => {
-      time += 0.01;
-      
-      // Dynamic light positions
-      const light1X = 20 + Math.sin(time * 0.5) * 40;
-      const light1Y = 30 + Math.cos(time * 0.3) * 30;
-      const light2X = 80 + Math.sin(time * 0.7) * 25;
-      const light2Y = 70 + Math.cos(time * 0.4) * 35;
-      const light3X = 40 + Math.sin(time * 0.9) * 45;
-      const light3Y = 20 + Math.cos(time * 0.6) * 40;
-      const light4X = 70 + Math.sin(time * 0.4) * 30;
-      const light4Y = 90 + Math.cos(time * 0.8) * 20;
-      const light5X = 10 + Math.sin(time * 0.6) * 50;
-      const light5Y = 80 + Math.cos(time * 0.5) * 25;
-      
-      // Dynamic beam angles
-      const beam1Angle = 45 + Math.sin(time * 0.3) * 60;
-      const beam2Angle = -30 + Math.cos(time * 0.4) * 80;
-      const beam3Angle = 60 + Math.sin(time * 0.6) * 90;
-      
-      // Update CSS custom properties
-      document.documentElement.style.setProperty('--light-1-x', `${light1X}%`);
-      document.documentElement.style.setProperty('--light-1-y', `${light1Y}%`);
-      document.documentElement.style.setProperty('--light-2-x', `${light2X}%`);
-      document.documentElement.style.setProperty('--light-2-y', `${light2Y}%`);
-      document.documentElement.style.setProperty('--light-3-x', `${light3X}%`);
-      document.documentElement.style.setProperty('--light-3-y', `${light3Y}%`);
-      document.documentElement.style.setProperty('--light-4-x', `${light4X}%`);
-      document.documentElement.style.setProperty('--light-4-y', `${light4Y}%`);
-      document.documentElement.style.setProperty('--light-5-x', `${light5X}%`);
-      document.documentElement.style.setProperty('--light-5-y', `${light5Y}%`);
-      
-      document.documentElement.style.setProperty('--beam-1-angle', `${beam1Angle}deg`);
-      document.documentElement.style.setProperty('--beam-2-angle', `${beam2Angle}deg`);
-      document.documentElement.style.setProperty('--beam-3-angle', `${beam3Angle}deg`);
-      
-      animationId = requestAnimationFrame(updateLighting);
-    };
-    
-    // Start the animation
-    updateLighting();
-    
-    // Pause animation when page is not visible (performance optimization)
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        cancelAnimationFrame(animationId);
-      } else {
-        updateLighting();
-      }
-    });
   }
 
   // Prevent scroll conflicts during navigation
@@ -187,31 +127,9 @@ class ScrollManager {
     window.addEventListener('scroll', () => {
       if (userScrolled && this.isNavigating) {
         this.isNavigating = false;
-        document.documentElement.classList.remove('smooth-scroll');
         userScrolled = false;
       }
     }, { passive: true });
-  }
-
-  // Utility method to scroll to element without conflicts
-  scrollToElement(elementId, offset = 0) {
-    const element = document.getElementById(elementId);
-    if (!element) return;
-
-    this.isNavigating = true;
-    document.documentElement.classList.add('smooth-scroll');
-
-    const elementTop = element.offsetTop - offset;
-    
-    window.scrollTo({
-      top: elementTop,
-      behavior: 'smooth'
-    });
-
-    setTimeout(() => {
-      document.documentElement.classList.remove('smooth-scroll');
-      this.isNavigating = false;
-    }, 800);
   }
 }
 
@@ -226,13 +144,17 @@ class MobileMenu {
   }
 
   setupMobileMenu() {
-    // Mobile menu toggle
-    const mobileMenuBtn = document.querySelector('.mobileMenuBtn');
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.sidebarOverlay') || this.createOverlay();
+    // Create overlay if it doesn't exist
+    let overlay = document.querySelector('.sidebarOverlay');
+    if (!overlay) {
+      overlay = this.createOverlay();
+    }
 
+    // Mobile menu toggle button
+    const mobileMenuBtn = document.querySelector('.mobileMenuBtn');
     if (mobileMenuBtn) {
-      mobileMenuBtn.addEventListener('click', () => {
+      mobileMenuBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         this.toggleMobileMenu();
       });
     }
@@ -258,6 +180,13 @@ class MobileMenu {
         this.closeMobileMenu();
       }
     });
+
+    // Close menu with escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeMobileMenu();
+      }
+    });
   }
 
   createOverlay() {
@@ -271,14 +200,16 @@ class MobileMenu {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.sidebarOverlay');
     
-    sidebar?.classList.toggle('mobileOpen');
-    overlay?.classList.toggle('active');
-    
-    // Prevent body scroll when menu is open
-    if (sidebar?.classList.contains('mobileOpen')) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+    if (sidebar && overlay) {
+      const isOpen = sidebar.classList.contains('mobileOpen');
+      
+      if (isOpen) {
+        this.closeMobileMenu();
+      } else {
+        sidebar.classList.add('mobileOpen');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
     }
   }
 
@@ -286,24 +217,41 @@ class MobileMenu {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.sidebarOverlay');
     
-    sidebar?.classList.remove('mobileOpen');
-    overlay?.classList.remove('active');
+    if (sidebar) sidebar.classList.remove('mobileOpen');
+    if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
   }
 }
 
 // Initialize everything when DOM is ready
-if (typeof window !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', () => {
-    window.scrollManager = new ScrollManager();
-    window.mobileMenu = new MobileMenu();
-    
-    // Add global mobile menu toggle function
-    window.toggleMobileMenu = () => {
-      window.mobileMenu.toggleMobileMenu();
-    };
-  });
+function initializeScrollManager() {
+  console.log('🚀 Initializing scroll manager...');
+  
+  window.scrollManager = new ScrollManager();
+  window.mobileMenu = new MobileMenu();
+  
+  // Add global mobile menu toggle function
+  window.toggleMobileMenu = () => {
+    window.mobileMenu.toggleMobileMenu();
+  };
+  
+  console.log('✅ Scroll manager initialized!');
 }
+
+// Multiple initialization methods for compatibility
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeScrollManager);
+} else {
+  // DOM is already loaded
+  initializeScrollManager();
+}
+
+// Fallback for older browsers
+window.addEventListener('load', () => {
+  if (!window.scrollManager) {
+    initializeScrollManager();
+  }
+});
 
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
