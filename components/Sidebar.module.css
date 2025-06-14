@@ -1,0 +1,108 @@
+.sidebar {
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky;
+  top: 70px;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+  contain: layout style;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+.sidebarSection {
+  margin-bottom: 2rem;
+}
+
+.sidebarTitle {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebarNav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebarNav li {
+  margin-bottom: 0.25rem;
+}
+
+.sidebarNav a {
+  display: block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  transition: all var(--transition-normal);
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+.sidebarNav a:hover,
+.sidebarNav a.active {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+
+.sidebarNav a.active {
+  background: linear-gradient(90deg, var(--bg-tertiary), rgba(66, 133, 244, 0.1));
+  box-shadow: inset 0 0 0 1px rgba(66, 133, 244, 0.2);
+}
+
+/* Mobile responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    display: none;
+  }
+
+  .sidebar.mobileOpen {
+    display: block;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 280px;
+    z-index: 999;
+    height: calc(100vh - 70px);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Smooth scrolling optimization */
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Focus management */
+.sidebarNav a:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
