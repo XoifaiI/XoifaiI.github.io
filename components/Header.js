@@ -1,76 +1,72 @@
-// Temporarily replace your Header component with this minimal version
-// This will help us isolate if there are any conflicts
+import { memo, useCallback, useEffect, useState } from 'react';
+import styles from './Header.module.css';
 
-import { memo } from 'react';
+const Header = memo(({ navigationItems, activeSection, onMobileMenuToggle }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-const Header = memo(({ navigationItems, activeSection }) => {
-  console.log('🔍 Header rendering...');
+  // Handle scroll effects
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      
+      setIsScrolled(scrollTop > 50);
+      setScrollProgress(scrollPercent);
+      
+      // Update CSS custom property for progress bar
+      document.documentElement.style.setProperty('--scroll-progress', `${scrollPercent}%`);
+    };
 
-  const handleNavClick = (e, href) => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleNavClick = useCallback((e, href) => {
     e.preventDefault();
     const target = document.querySelector(href);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  };
+  }, []);
 
   return (
-    <header style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      height: '70px',
-      backgroundColor: 'rgba(0, 0, 0, 0.9)',
-      zIndex: 1000,
-      borderBottom: '1px solid #333',
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 2rem',
-      color: 'white'
-    }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        width: '100%',
-        maxWidth: '1400px',
-        margin: '0 auto'
-      }}>
+    <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
+      <div className={styles.headerContent}>
+        {/* Logo */}
         <a 
           href="#overview" 
+          className={styles.logo}
           onClick={(e) => handleNavClick(e, '#overview')}
-          style={{
-            color: 'white',
-            textDecoration: 'none',
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}
         >
-          🔐 Luau Cryptography
+          <i className="fas fa-shield-alt" aria-hidden="true"></i>
+          Luau Cryptography
         </a>
-        
-        <nav style={{ display: 'flex', gap: '1rem' }}>
+
+        {/* Desktop Navigation */}
+        <nav className={styles.navLinks}>
           {navigationItems?.map((item) => (
             <a
               key={item.href}
               href={item.href}
+              className={`${styles.navLink} ${activeSection === item.href.slice(1) ? styles.active : ''}`}
               onClick={(e) => handleNavClick(e, item.href)}
-              style={{
-                color: activeSection === item.href.slice(1) ? '#0070f3' : '#ccc',
-                textDecoration: 'none',
-                padding: '0.5rem 1rem',
-                borderRadius: '4px',
-                transition: 'color 0.2s'
-              }}
             >
+              {item.icon && <i className={item.icon} aria-hidden="true"></i>}
               {item.label}
             </a>
           ))}
         </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          className={styles.mobileMenuBtn}
+          onClick={onMobileMenuToggle}
+          aria-label="Toggle mobile menu"
+        >
+          <i className="fas fa-bars" aria-hidden="true"></i>
+        </button>
       </div>
     </header>
   );
