@@ -40,7 +40,6 @@ jobs:
       - name: Build application
         run: |
           npm run build
-          npm run export
           
       - name: Add .nojekyll file
         run: touch out/.nojekyll
