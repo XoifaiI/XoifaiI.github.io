@@ -97,7 +97,7 @@ body {
   backface-visibility: hidden;
   
   /* CRITICAL: Account for FIXED header */
-  padding-top: 70px;
+  /*padding-top: 70px;*/
   margin: 0;
   
   /* Basic background */
