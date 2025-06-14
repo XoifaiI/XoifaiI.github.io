@@ -18,6 +18,7 @@ export default function Home() {
   const { copyCode } = useCopyHandler();
   const { performHash, encodeBase64, decodeBase64 } = useDemoHandlers();
 
+  // Memoized navigation items to prevent unnecessary re-renders
   const navigationItems = useMemo(() => [
     { href: '#overview', label: 'Overview' },
     { href: '#installation', label: 'Installation' },
@@ -52,6 +53,7 @@ export default function Home() {
     },
   ], []);
 
+  // Global function exposure for compatibility (cleaned up approach)
   useEffect(() => {
     const globalFunctions = {
       copyCode,
@@ -60,8 +62,10 @@ export default function Home() {
       decodeBase64,
     };
 
+    // Expose functions globally for onclick handlers
     Object.assign(window, globalFunctions);
 
+    // Cleanup function
     return () => {
       Object.keys(globalFunctions).forEach(key => {
         delete window[key];
@@ -69,6 +73,7 @@ export default function Home() {
     };
   }, [copyCode, performHash, encodeBase64, decodeBase64]);
 
+  // CSS custom property for scroll progress
   useEffect(() => {
     document.documentElement.style.setProperty('--scroll-progress', `${scrollProgress}%`);
   }, [scrollProgress]);
@@ -84,18 +89,33 @@ export default function Home() {
         <meta property="og:description" content="Production ready cryptography library with 28+ functions for Roblox development" />
         <meta property="og:type" content="website" />
         <link rel="icon" href="/favicon.ico" />
-
-        {/* Preload critical fonts and styles */}
-        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-        {/* Preload scripts */}
-        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" as="script" />
-        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" as="script" />
-
-        {/* ✅ Load your custom override CSS last */}
-        <link rel="stylesheet" href="/styles/position-override.css" />
+        
+        {/* Preload critical fonts */}
+        <link 
+          rel="preconnect" 
+          href="https://cdnjs.cloudflare.com" 
+          crossOrigin="anonymous"
+        />
+        <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" 
+        />
+        <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+        />
+        
+        {/* Preload critical scripts */}
+        <link 
+          rel="preload" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" 
+          as="script" 
+        />
+        <link 
+          rel="preload" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" 
+          as="script" 
+        />
       </Head>
 
       <div className={styles.app}>
@@ -125,8 +145,11 @@ export default function Home() {
   );
 }
 
+// Static generation for optimal performance
 export async function getStaticProps() {
   return {
-    props: {},
+    props: {
+      // Add any static data here if needed
+     },
   };
 }
