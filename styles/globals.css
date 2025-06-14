@@ -1,4 +1,4 @@
-/* STEP-BY-STEP GLOBALS.CSS - WORKING FIXED POSITIONING + CAREFUL STYLING */
+/* STEP 2: ADDING BACKGROUND EFFECTS & IMPROVED TYPOGRAPHY */
 
 * {
   margin: 0;
@@ -86,8 +86,21 @@ body {
   /* Basic background */
   position: relative;
   min-height: 100vh;
-  
-  /* REMOVED: All transform/will-change/contain properties that break fixed positioning */
+}
+
+/* ADDED: Background particle effects - positioned on body::before to avoid stacking context issues */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(0, 112, 243, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(0, 217, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Focus styles that work */
@@ -117,8 +130,6 @@ body {
   gap: 0.5rem;
   position: relative;
   overflow: hidden;
-  
-  /* REMOVED: will-change and transform that might cause issues */
 }
 
 /* Safe button hover effect */
@@ -195,7 +206,6 @@ section[id] {
   transition: all var(--transition-slow);
   min-height: 150px;
   position: relative;
-  /* REMOVED: contain property that breaks fixed positioning */
 }
 
 section[id].highlighted {
@@ -221,7 +231,6 @@ section[id].highlighted::before {
   transition: all var(--transition-slow);
   min-height: 100px;
   position: relative;
-  /* REMOVED: contain property that breaks fixed positioning */
 }
 
 .api-category[id].highlighted {
@@ -246,7 +255,6 @@ pre[class*="language-"] {
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
-  /* REMOVED: contain and will-change that might break fixed positioning */
 }
 
 code[class*="language-"] {
@@ -312,6 +320,35 @@ img {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* ADDED: Section hover effects - safe version without transform */
+.content section:hover {
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(0, 112, 243, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+    rgba(0, 0, 0, 0.2);
+}
+
+/* ADDED: Subtle glow animations - safe version */
+@keyframes subtleGlow {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+  100% { opacity: 0.3; }
+}
+
+.content section:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 112, 243, 0.02);
+  animation: subtleGlow 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   html,
@@ -328,6 +365,10 @@ img {
   .btn::before {
     display: none;
   }
+  
+  .content section:hover::after {
+    animation: none !important;
+  }
 }
 
 /* High contrast support */
@@ -338,5 +379,9 @@ img {
     --bg-primary: #000000;
     --bg-secondary: #000000;
     --border: #ffffff;
+  }
+  
+  body::before {
+    display: none;
   }
 }
