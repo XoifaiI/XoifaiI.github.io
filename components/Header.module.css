@@ -1,15 +1,19 @@
+/* HEADER - FIXED POSITIONING TO STAY AT TOP ALWAYS */
 .header {
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   padding: 0;
+  
+  /* CRITICAL: Fixed positioning to stay at top */
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
   width: 100%;
+  z-index: 1000;
+  
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
@@ -21,7 +25,7 @@
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* PROGRESS BAR - Shows scroll progress */
+/* Progress bar that follows scroll */
 .header::after {
   content: '';
   position: absolute;
@@ -32,7 +36,6 @@
   width: var(--scroll-progress, 0%);
   transition: width 0.1s ease-out;
   box-shadow: 0 0 10px rgba(0, 112, 243, 0.5);
-  border-radius: 0 2px 0 0;
 }
 
 .headerContent {
@@ -115,6 +118,7 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Mobile responsive */
 @media (max-width: 1024px) {
   .mobileMenuBtn {
     display: block;
