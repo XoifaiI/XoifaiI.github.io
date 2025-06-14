@@ -25,11 +25,15 @@ const Header = memo(({ navigationItems, activeSection, onMobileMenuToggle }) => 
 
   const handleNavClick = useCallback((e, href) => {
     e.preventDefault();
+    console.log('Header clicked href:', href);
+    console.log('Header current activeSection:', activeSection);
+    console.log('Header comparison result:', activeSection === href.slice(1));
+    
     const target = document.querySelector(href);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, []);
+  }, [activeSection]);
 
   return (
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
@@ -46,17 +50,22 @@ const Header = memo(({ navigationItems, activeSection, onMobileMenuToggle }) => 
 
         {/* Desktop Navigation */}
         <nav className={styles.navLinks}>
-          {navigationItems?.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className={`${styles.navLink} ${activeSection === item.href.slice(1) ? styles.active : ''}`}
-              onClick={(e) => handleNavClick(e, item.href)}
-            >
-              {item.icon && <i className={item.icon} aria-hidden="true"></i>}
-              {item.label}
-            </a>
-          ))}
+          {navigationItems?.map((item) => {
+            const isActive = activeSection === item.href.slice(1);
+            console.log(`Header Item: ${item.label}, href: ${item.href}, activeSection: ${activeSection}, isActive: ${isActive}`);
+            
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className={`${styles.navLink} ${isActive ? styles.active : ''}`}
+                onClick={(e) => handleNavClick(e, item.href)}
+              >
+                {item.icon && <i className={item.icon} aria-hidden="true"></i>}
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
 
         {/* Mobile Menu Button */}
