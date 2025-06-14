@@ -1,48 +1,24 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo } from 'react';
 import styles from './Header.module.css';
 
-const Header = memo(({ navigationItems, activeSection, onMobileMenuToggle }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  // Handle scroll effects
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = (scrollTop / docHeight) * 100;
-      
-      setIsScrolled(scrollTop > 50);
-      setScrollProgress(scrollPercent);
-      
-      // Update CSS custom property for progress bar
-      document.documentElement.style.setProperty('--scroll-progress', `${scrollPercent}%`);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleNavClick = useCallback((e, href) => {
-    e.preventDefault();
-    console.log('Header clicked href:', href);
-    console.log('Header current activeSection:', activeSection);
-    console.log('Header comparison result:', activeSection === href.slice(1));
-    
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [activeSection]);
+const Header = memo(({ 
+  navigationItems, 
+  activeSection, 
+  scrollProgress, 
+  onNavClick,  // 👈 Navigation handler from useScrollManager
+  onMobileMenuToggle,
+  isMobileMenuOpen 
+}) => {
+  console.log('🎯 Header render - activeSection:', activeSection);
 
   return (
-    <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
+    <header className={`${styles.header} ${scrollProgress > 5 ? styles.scrolled : ''}`}>
       <div className={styles.headerContent}>
         {/* Logo */}
         <a 
           href="#overview" 
           className={styles.logo}
-          onClick={(e) => handleNavClick(e, '#overview')}
+          onClick={(e) => onNavClick(e, '#overview')}
         >
           <i className="fas fa-shield-alt" aria-hidden="true"></i>
           Luau Cryptography
@@ -52,14 +28,14 @@ const Header = memo(({ navigationItems, activeSection, onMobileMenuToggle }) => 
         <nav className={styles.navLinks}>
           {navigationItems?.map((item) => {
             const isActive = activeSection === item.href.slice(1);
-            console.log(`Header Item: ${item.label}, href: ${item.href}, activeSection: ${activeSection}, isActive: ${isActive}`);
+            console.log(`📋 Header Item: ${item.label}, href: ${item.href}, activeSection: ${activeSection}, isActive: ${isActive}`);
             
             return (
               <a
                 key={item.href}
                 href={item.href}
                 className={`${styles.navLink} ${isActive ? styles.active : ''}`}
-                onClick={(e) => handleNavClick(e, item.href)}
+                onClick={(e) => onNavClick(e, item.href)}
               >
                 {item.icon && <i className={item.icon} aria-hidden="true"></i>}
                 {item.label}
@@ -70,11 +46,12 @@ const Header = memo(({ navigationItems, activeSection, onMobileMenuToggle }) => 
 
         {/* Mobile Menu Button */}
         <button
-          className={styles.mobileMenuBtn}
+          className={`${styles.mobileMenuBtn} ${isMobileMenuOpen ? styles.active : ''}`}
           onClick={onMobileMenuToggle}
           aria-label="Toggle mobile menu"
+          aria-expanded={isMobileMenuOpen}
         >
-          <i className="fas fa-bars" aria-hidden="true"></i>
+          <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'}`} aria-hidden="true"></i>
         </button>
       </div>
     </header>
