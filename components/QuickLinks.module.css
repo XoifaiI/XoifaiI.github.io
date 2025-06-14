@@ -1,0 +1,119 @@
+.quickLinks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.quickLink {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.quickLink::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform var(--transition-normal);
+}
+
+.quickLink:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.quickLink:hover::before {
+  transform: scaleX(1);
+}
+
+.quickLink i {
+  font-size: 2rem;
+  color: var(--accent);
+  transition: transform var(--transition-normal);
+}
+
+.quickLink:hover i {
+  transform: scale(1.1);
+}
+
+.quickLink h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.quickLink p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .quickLinks {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .quickLink {
+    padding: 1.5rem;
+  }
+  
+  .quickLink i {
+    font-size: 1.5rem;
+  }
+}
+
+/* Focus states for accessibility */
+.quickLink:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Animation for better UX */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quickLink {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.quickLink:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.quickLink:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.quickLink:nth-child(4) {
+  animation-delay: 0.3s;
+}
