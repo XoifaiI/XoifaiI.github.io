@@ -29,7 +29,7 @@ export default function Document() {
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
         
-        {/* Critical CSS inline for better performance */}
+        {/*
         <style jsx>{`
           /* Critical CSS for above-the-fold content */
           * {
@@ -57,7 +57,7 @@ export default function Document() {
             color: var(--text-primary);
             line-height: 1.6;
           }
-        `}</style>
+        `}</style>*/}
       </Head>
       <body>
         <Main />
