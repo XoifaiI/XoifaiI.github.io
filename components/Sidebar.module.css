@@ -4,11 +4,14 @@
   -webkit-backdrop-filter: blur(20px);
   border-right: 1px solid var(--border);
   padding: 2rem 0;
-  position: sticky;
+  position: fixed;
   top: 70px;
+  left: 0;
+  width: 300px;
   height: calc(100vh - 70px);
   overflow-y: auto;
   contain: layout style;
+  z-index: 100;
   
   /* Modern scrollbar */
   scrollbar-width: thin;
@@ -195,26 +198,28 @@
 }
 
 /* Mobile responsive */
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 280px;
+  }
+}
+
 @media (max-width: 1024px) {
   .sidebar {
-    display: none;
-  }
-
-  .sidebar.mobileOpen {
-    display: block;
-    position: fixed;
-    top: 70px;
-    left: 0;
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
     width: 320px;
-    z-index: 999;
-    height: calc(100vh - 70px);
     box-shadow: 
       2px 0 20px rgba(0, 0, 0, 0.3),
       0 0 40px rgba(0, 112, 243, 0.1);
     background: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 2rem 0;
+    z-index: 999;
+  }
+
+  .sidebar.mobileOpen {
+    transform: translateX(0);
   }
   
   .sidebarSection {
@@ -234,7 +239,7 @@
 }
 
 @media (max-width: 768px) {
-  .sidebar.mobileOpen {
+  .sidebar {
     width: 300px;
   }
   
@@ -257,7 +262,7 @@
 }
 
 @media (max-width: 480px) {
-  .sidebar.mobileOpen {
+  .sidebar {
     width: 280px;
   }
   
@@ -280,7 +285,7 @@
 
 /* Extra small screens */
 @media (max-width: 360px) {
-  .sidebar.mobileOpen {
+  .sidebar {
     width: 260px;
   }
   
@@ -293,6 +298,33 @@
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
     min-height: 2rem;
+  }
+}
+
+/* Mobile overlay */
+.sidebarOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+}
+
+.sidebarOverlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (min-width: 1025px) {
+  .sidebarOverlay {
+    display: none;
   }
 }
 
