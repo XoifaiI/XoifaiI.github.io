@@ -1,80 +1,191 @@
 .hero {
   margin-bottom: 4rem;
-  padding: 3rem;
-  background: var(--bg-secondary);
-  border-radius: 8px;
+  padding: 4rem 3rem;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+  border-radius: 16px;
   border: 1px solid var(--border);
   contain: layout style;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(0, 112, 243, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 2;
 }
 
 .title {
-  font-size: 3rem;
+  font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, var(--text-primary), var(--accent));
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  
+  /* Modern gradient text */
+  background: linear-gradient(135deg, 
+    var(--text-primary) 0%, 
+    var(--accent-light) 40%, 
+    var(--success) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  line-height: 1.2;
+  
+  /* Fallback for unsupported browsers */
+  color: var(--text-primary);
+  
+  /* Text shadow for depth */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+@supports not (-webkit-background-clip: text) {
+  .title {
+    color: var(--text-primary);
+    background: none;
+    -webkit-text-fill-color: unset;
+  }
 }
 
 .subtitle {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   margin-bottom: 3rem;
-  line-height: 1.5;
+  line-height: 1.6;
   max-width: 800px;
+  font-weight: 400;
 }
 
 .stats {
-  display: flex;
-  gap: 2rem;
-  margin: 2rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
 }
 
 .stat {
   text-align: center;
-  padding: 1rem;
-  background: var(--bg-tertiary);
-  border-radius: 6px;
-  flex: 1;
+  padding: 2rem 1.5rem;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  transform: scaleX(0);
   transition: transform var(--transition-normal);
 }
 
+.stat:hover::before {
+  transform: scaleX(1);
+}
+
 .stat:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-light);
 }
 
 .statNumber {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 800;
   color: var(--accent);
   display: block;
   line-height: 1;
+  margin-bottom: 0.5rem;
+  
+  /* Gradient effect */
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@supports not (-webkit-background-clip: text) {
+  .statNumber {
+    color: var(--accent);
+    background: none;
+    -webkit-text-fill-color: unset;
+  }
 }
 
 .statLabel {
   font-size: 0.9rem;
   color: var(--text-muted);
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.5px;
 }
 
 .actions {
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.actions .btn {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  min-width: 160px;
+  justify-content: center;
+}
+
+.actions .btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  box-shadow: 0 4px 15px rgba(0, 112, 243, 0.2);
+}
+
+.actions .btn-primary:hover {
+  box-shadow: 0 8px 25px rgba(0, 112, 243, 0.3), var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+.actions .btn-secondary {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.actions .btn-secondary:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .hero {
-    padding: 2rem;
+    padding: 3rem 2rem;
   }
   
   .title {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   
   .subtitle {
@@ -83,22 +194,35 @@
   }
   
   .stats {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 1rem;
+  }
+  
+  .stat {
+    padding: 1.5rem 1rem;
+  }
+  
+  .statNumber {
+    font-size: 2rem;
   }
   
   .actions {
     flex-direction: column;
   }
+  
+  .actions .btn {
+    min-width: auto;
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
   .hero {
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
   }
   
   .title {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
   
   .subtitle {
@@ -106,10 +230,71 @@
   }
   
   .statNumber {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
   
   .statLabel {
     font-size: 0.8rem;
+  }
+}
+
+/* Modern animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero > * {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.title {
+  animation-delay: 0.1s;
+}
+
+.subtitle {
+  animation-delay: 0.2s;
+}
+
+.stats {
+  animation-delay: 0.3s;
+}
+
+.actions {
+  animation-delay: 0.4s;
+}
+
+/* Floating elements animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.stat:nth-child(1) {
+  animation: float 6s ease-in-out infinite;
+}
+
+.stat:nth-child(2) {
+  animation: float 6s ease-in-out infinite 2s;
+}
+
+.stat:nth-child(3) {
+  animation: float 6s ease-in-out infinite 4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero > *,
+  .stat {
+    animation: none !important;
   }
 }
