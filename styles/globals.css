@@ -110,7 +110,7 @@ body {
   min-height: 100vh;
 }
 
-/* Amazing Animated Background */
+/* Amazing Dynamic Background - Movie Site Style */
 body::before {
   content: '';
   position: fixed;
@@ -119,31 +119,32 @@ body::before {
   width: 100%;
   height: 100%;
   background: 
-    /* Animated gradient overlay */
-    radial-gradient(circle at 20% 50%, rgba(0, 112, 243, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(0, 217, 255, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 90% 90%, rgba(0, 112, 243, 0.06) 0%, transparent 50%);
+    /* Dynamic moving light spots */
+    radial-gradient(circle at var(--light-1-x, 20%) var(--light-1-y, 30%), rgba(0, 112, 243, 0.15) 0%, transparent 25%),
+    radial-gradient(circle at var(--light-2-x, 80%) var(--light-2-y, 70%), rgba(0, 217, 255, 0.12) 0%, transparent 30%),
+    radial-gradient(circle at var(--light-3-x, 40%) var(--light-3-y, 20%), rgba(245, 158, 11, 0.08) 0%, transparent 20%),
+    radial-gradient(circle at var(--light-4-x, 70%) var(--light-4-y, 90%), rgba(0, 112, 243, 0.10) 0%, transparent 35%),
+    radial-gradient(circle at var(--light-5-x, 10%) var(--light-5-y, 80%), rgba(0, 217, 255, 0.06) 0%, transparent 25%);
   
   /* Animated dot pattern */
   background-image:
-    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, rgba(0, 112, 243, 0.15) 1px, transparent 1px),
-    radial-gradient(circle at 50% 50%, rgba(0, 217, 255, 0.08) 1px, transparent 1px);
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(0, 112, 243, 0.12) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(0, 217, 255, 0.06) 1px, transparent 1px);
   
   background-size: 
-    60px 60px,
-    80px 80px, 
-    40px 40px;
+    40px 40px,
+    60px 60px, 
+    30px 30px;
   
-  /* Animated movement */
-  animation: backgroundFloat 20s ease-in-out infinite;
+  /* Dynamic light movement */
+  animation: dynamicLighting 8s ease-in-out infinite;
   
   pointer-events: none;
   z-index: -2;
 }
 
-/* Floating light effect */
+/* Dynamic floating light beams */
 body::after {
   content: '';
   position: fixed;
@@ -152,47 +153,105 @@ body::after {
   width: 100%;
   height: 100%;
   background: 
-    /* Moving light beams */
-    linear-gradient(45deg, transparent 30%, rgba(0, 112, 243, 0.03) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(0, 217, 255, 0.02) 50%, transparent 70%);
+    /* Multiple moving light beams */
+    linear-gradient(var(--beam-1-angle, 45deg), transparent 30%, rgba(0, 112, 243, 0.04) 50%, transparent 70%),
+    linear-gradient(var(--beam-2-angle, -30deg), transparent 40%, rgba(0, 217, 255, 0.03) 50%, transparent 60%),
+    linear-gradient(var(--beam-3-angle, 60deg), transparent 35%, rgba(245, 158, 11, 0.02) 50%, transparent 65%);
   
-  /* Continuous movement */
-  animation: lightSweep 15s linear infinite;
+  /* Continuous random movement */
+  animation: lightBeamSweep 12s linear infinite;
   
   pointer-events: none;
   z-index: -1;
 }
 
-/* Background animations */
-@keyframes backgroundFloat {
-  0%, 100% {
-    transform: translate(0px, 0px) rotate(0deg);
-    background-size: 60px 60px, 80px 80px, 40px 40px;
+/* Dynamic lighting animations */
+@keyframes dynamicLighting {
+  0% {
+    --light-1-x: 20%; --light-1-y: 30%;
+    --light-2-x: 80%; --light-2-y: 70%;
+    --light-3-x: 40%; --light-3-y: 20%;
+    --light-4-x: 70%; --light-4-y: 90%;
+    --light-5-x: 10%; --light-5-y: 80%;
+    transform: rotate(0deg) scale(1);
   }
-  33% {
-    transform: translate(30px, -30px) rotate(1deg);
-    background-size: 65px 65px, 85px 85px, 45px 45px;
+  20% {
+    --light-1-x: 60%; --light-1-y: 80%;
+    --light-2-x: 30%; --light-2-y: 40%;
+    --light-3-x: 90%; --light-3-y: 60%;
+    --light-4-x: 15%; --light-4-y: 25%;
+    --light-5-x: 75%; --light-5-y: 15%;
+    transform: rotate(2deg) scale(1.1);
   }
-  66% {
-    transform: translate(-20px, 20px) rotate(-1deg);
-    background-size: 55px 55px, 75px 75px, 35px 35px;
+  40% {
+    --light-1-x: 85%; --light-1-y: 15%;
+    --light-2-x: 25%; --light-2-y: 85%;
+    --light-3-x: 65%; --light-3-y: 45%;
+    --light-4-x: 45%; --light-4-y: 75%;
+    --light-5-x: 90%; --light-5-y: 35%;
+    transform: rotate(-1deg) scale(0.9);
+  }
+  60% {
+    --light-1-x: 35%; --light-1-y: 65%;
+    --light-2-x: 75%; --light-2-y: 25%;
+    --light-3-x: 15%; --light-3-y: 85%;
+    --light-4-x: 85%; --light-4-y: 55%;
+    --light-5-x: 55%; --light-5-y: 95%;
+    transform: rotate(1deg) scale(1.05);
+  }
+  80% {
+    --light-1-x: 70%; --light-1-y: 40%;
+    --light-2-x: 40%; --light-2-y: 90%;
+    --light-3-x: 80%; --light-3-y: 10%;
+    --light-4-x: 20%; --light-4-y: 60%;
+    --light-5-x: 95%; --light-5-y: 75%;
+    transform: rotate(-2deg) scale(0.95);
+  }
+  100% {
+    --light-1-x: 20%; --light-1-y: 30%;
+    --light-2-x: 80%; --light-2-y: 70%;
+    --light-3-x: 40%; --light-3-y: 20%;
+    --light-4-x: 70%; --light-4-y: 90%;
+    --light-5-x: 10%; --light-5-y: 80%;
+    transform: rotate(0deg) scale(1);
   }
 }
 
-@keyframes lightSweep {
+@keyframes lightBeamSweep {
   0% {
-    transform: translateX(-100%) translateY(-100%);
-    opacity: 0;
+    --beam-1-angle: 45deg;
+    --beam-2-angle: -30deg;
+    --beam-3-angle: 60deg;
+    transform: translate(-10%, -10%);
+    opacity: 0.8;
   }
-  10% {
+  25% {
+    --beam-1-angle: 120deg;
+    --beam-2-angle: 15deg;
+    --beam-3-angle: -45deg;
+    transform: translate(5%, 5%);
     opacity: 1;
   }
-  90% {
-    opacity: 1;
+  50% {
+    --beam-1-angle: -60deg;
+    --beam-2-angle: 90deg;
+    --beam-3-angle: 135deg;
+    transform: translate(10%, -5%);
+    opacity: 0.9;
+  }
+  75% {
+    --beam-1-angle: 30deg;
+    --beam-2-angle: -90deg;
+    --beam-3-angle: 0deg;
+    transform: translate(-5%, 10%);
+    opacity: 0.7;
   }
   100% {
-    transform: translateX(100%) translateY(100%);
-    opacity: 0;
+    --beam-1-angle: 45deg;
+    --beam-2-angle: -30deg;
+    --beam-3-angle: 60deg;
+    transform: translate(-10%, -10%);
+    opacity: 0.8;
   }
 }
 
