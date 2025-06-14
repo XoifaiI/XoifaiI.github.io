@@ -21,28 +21,23 @@
 }
 
 .mainLayout {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 0;
+  display: block;
   min-height: calc(100vh - 70px);
   max-width: 1600px;
   margin: 0 auto;
+  padding-left: 300px;
 }
 
 .content {
   background: transparent;
   padding: 3rem;
-  overflow-y: auto;
+  overflow-y: visible;
   position: relative;
   line-height: 1.6;
   
   /* Optimize for scroll performance */
   will-change: scroll-position;
   contain: layout style;
-  
-  /* Modern scrollbar */
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-light) transparent;
 }
 
 /* Modern card-like sections */
