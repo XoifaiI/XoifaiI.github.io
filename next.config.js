@@ -11,11 +11,6 @@ const nextConfig = {
   // basePath: '/your-repo-name',
   // assetPrefix: '/your-repo-name/',
   
-  // Optimize for static generation
-  experimental: {
-    optimizeCss: true,
-  },
-  
   // Disable server-side features for static export
   eslint: {
     ignoreDuringBuilds: true,
