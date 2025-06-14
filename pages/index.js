@@ -150,8 +150,6 @@ export async function getStaticProps() {
   return {
     props: {
       // Add any static data here if needed
-    },
-    // Regenerate the page at most once per day
-    revalidate: 86400,
+     },
   };
 }
