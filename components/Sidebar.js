@@ -14,7 +14,10 @@ const Sidebar = memo(({ sections, activeSection }) => {
     <aside className={styles.sidebar} id="sidebar">
       {sections.map((section, index) => (
         <div key={index} className={styles.sidebarSection}>
+          {/* Changed from sidebarTitle to sectionHeader to match CSS */}
           <div className={styles.sectionHeader}>{section.title}</div>
+          
+          {/* Changed to nav element and removed ul/li structure */}
           <nav className={styles.sidebarNav}>
             {section.items.map((item) => (
               <a
@@ -23,6 +26,7 @@ const Sidebar = memo(({ sections, activeSection }) => {
                 className={`${styles.navLink} ${activeSection === item.href.slice(1) ? styles.active : ''}`}
                 onClick={(e) => handleNavClick(e, item.href)}
               >
+                {/* Add icon support */}
                 {item.icon && <i className={`${styles.navIcon} ${item.icon}`}></i>}
                 {item.label}
               </a>
