@@ -14,13 +14,13 @@ import { useDemoHandlers } from '../hooks/useDemoHandlers';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
-  // 🔥 USE ALL FUNCTIONS FROM useScrollManager
+  // Use all functions from useScrollManager
   const { 
     activeSection, 
     scrollProgress, 
     isMobileMenuOpen, 
     toggleMobileMenu, 
-    handleNavClick  // 👈 This is the key missing piece!
+    handleNavClick
   } = useScrollManager();
   
   const { copyCode } = useCopyHandler();
@@ -126,8 +126,8 @@ export default function Home() {
           navigationItems={navigationItems} 
           activeSection={activeSection}
           scrollProgress={scrollProgress}
-          onNavClick={handleNavClick}  {/* 👈 Pass the navigation handler */}
-          onMobileMenuToggle={toggleMobileMenu}  {/* 👈 Pass the toggle handler */}
+          onNavClick={handleNavClick}
+          onMobileMenuToggle={toggleMobileMenu}
           isMobileMenuOpen={isMobileMenuOpen}
         />
         
@@ -135,7 +135,7 @@ export default function Home() {
           <Sidebar 
             sections={sidebarSections} 
             activeSection={activeSection}
-            onNavClick={handleNavClick}  {/* 👈 Pass the navigation handler */}
+            onNavClick={handleNavClick}
             isMobileMenuOpen={isMobileMenuOpen}
           />
           
