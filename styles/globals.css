@@ -1,4 +1,4 @@
-/* RESTORED GLOBALS.CSS - ALL STYLING + WORKING FIXED POSITIONING */
+/* STEP-BY-STEP GLOBALS.CSS - WORKING FIXED POSITIONING + CAREFUL STYLING */
 
 * {
   margin: 0;
@@ -79,21 +79,18 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   
-  /* Optimize performance */
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  
-  /* RESTORED: Account for FIXED header */
+  /* CRITICAL: Account for FIXED header - this works */
   padding-top: 70px;
   margin: 0;
   
   /* Basic background */
   position: relative;
   min-height: 100vh;
+  
+  /* REMOVED: All transform/will-change/contain properties that break fixed positioning */
 }
 
-/* Improve focus accessibility with modern styling */
+/* Focus styles that work */
 *:focus {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -104,7 +101,7 @@ body {
   outline: none;
 }
 
-/* Modern button styles */
+/* Button styles - SAFE VERSION */
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -121,11 +118,10 @@ body {
   position: relative;
   overflow: hidden;
   
-  /* Performance optimization */
-  will-change: transform, background-color, box-shadow;
-  transform: translateZ(0);
+  /* REMOVED: will-change and transform that might cause issues */
 }
 
+/* Safe button hover effect */
 .btn::before {
   content: '';
   position: absolute;
@@ -183,7 +179,6 @@ body {
   font-size: 0.8rem;
   font-weight: 500;
   transition: all var(--transition-normal);
-  transform: translateZ(0);
 }
 
 .copy-btn:hover {
@@ -194,13 +189,13 @@ body {
   transform: translateY(-1px);
 }
 
-/* Section highlighting with modern effects */
+/* Section highlighting - SAFE VERSION */
 section[id] {
   scroll-margin-top: 90px;
   transition: all var(--transition-slow);
   min-height: 150px;
-  contain: layout style;
   position: relative;
+  /* REMOVED: contain property that breaks fixed positioning */
 }
 
 section[id].highlighted {
@@ -225,8 +220,8 @@ section[id].highlighted::before {
   scroll-margin-top: 90px;
   transition: all var(--transition-slow);
   min-height: 100px;
-  contain: layout style;
   position: relative;
+  /* REMOVED: contain property that breaks fixed positioning */
 }
 
 .api-category[id].highlighted {
@@ -235,7 +230,7 @@ section[id].highlighted::before {
   border-radius: 0 8px 8px 0;
 }
 
-/* Modern code highlighting */
+/* Code highlighting */
 .token.keyword { color: #ff79c6; }
 .token.string { color: #50fa7b; }
 .token.comment { color: #6272a4; }
@@ -245,14 +240,13 @@ section[id].highlighted::before {
 .token.punctuation { color: #f8f8f2; }
 .token.variable { color: #50fa7b; }
 
-/* Performance improvements for syntax highlighting */
+/* Syntax highlighting - SAFE VERSION */
 pre[class*="language-"] {
-  contain: layout style;
-  will-change: auto;
   background: var(--bg-card) !important;
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
+  /* REMOVED: contain and will-change that might break fixed positioning */
 }
 
 code[class*="language-"] {
@@ -262,14 +256,14 @@ code[class*="language-"] {
   color: var(--text-primary);
 }
 
-/* Optimize images and media */
+/* Images */
 img {
   max-width: 100%;
   height: auto;
   loading: lazy;
 }
 
-/* Modern scrollbar styling */
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -299,7 +293,7 @@ img {
   scrollbar-color: var(--border-light) var(--bg-secondary);
 }
 
-/* Modern selection styles */
+/* Selection styles */
 ::selection {
   background: var(--accent-bg);
   color: var(--accent-light);
@@ -310,7 +304,7 @@ img {
   color: var(--accent-light);
 }
 
-/* Glass morphism effect for elevated elements */
+/* Glass effect - SAFE VERSION */
 .glass {
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
@@ -318,35 +312,7 @@ img {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Particle effects for sections */
-.content section:hover::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(0, 112, 243, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.03) 0%, transparent 50%);
-  animation: sectionGlow 2s ease-in-out infinite alternate;
-  pointer-events: none;
-  z-index: -1;
-  border-radius: inherit;
-}
-
-@keyframes sectionGlow {
-  0% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1.02);
-  }
-}
-
-/* Reduce motion for users who prefer it */
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   html,
   html.smooth-scroll {
@@ -359,27 +325,12 @@ img {
     transition-duration: 0.01ms !important;
   }
   
-  body::before,
-  body::after {
-    animation: none !important;
-  }
-  
-  .btn,
-  section[id],
-  .api-category[id] {
-    transition: none !important;
-  }
-  
   .btn::before {
     display: none;
   }
-  
-  .content section:hover::before {
-    animation: none !important;
-  }
 }
 
-/* High contrast mode support */
+/* High contrast support */
 @media (prefers-contrast: high) {
   :root {
     --text-primary: #ffffff;
@@ -387,10 +338,5 @@ img {
     --bg-primary: #000000;
     --bg-secondary: #000000;
     --border: #ffffff;
-  }
-  
-  body::before,
-  body::after {
-    display: none;
   }
 }
