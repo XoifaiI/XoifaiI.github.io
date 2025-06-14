@@ -14,7 +14,15 @@ import { useDemoHandlers } from '../hooks/useDemoHandlers';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
-  const { activeSection, scrollProgress } = useScrollManager();
+  // 🔥 USE ALL FUNCTIONS FROM useScrollManager
+  const { 
+    activeSection, 
+    scrollProgress, 
+    isMobileMenuOpen, 
+    toggleMobileMenu, 
+    handleNavClick  // 👈 This is the key missing piece!
+  } = useScrollManager();
+  
   const { copyCode } = useCopyHandler();
   const { performHash, encodeBase64, decodeBase64 } = useDemoHandlers();
 
@@ -30,7 +38,7 @@ export default function Home() {
     {
       title: 'Getting Started',
       items: [
-        { href: '#overview', label: 'Overview', active: true },
+        { href: '#overview', label: 'Overview' },
         { href: '#installation', label: 'Installation' },
         { href: '#quick-start', label: 'Quick Start' },
       ],
@@ -72,11 +80,6 @@ export default function Home() {
       });
     };
   }, [copyCode, performHash, encodeBase64, decodeBase64]);
-
-  // CSS custom property for scroll progress
-  useEffect(() => {
-    document.documentElement.style.setProperty('--scroll-progress', `${scrollProgress}%`);
-  }, [scrollProgress]);
 
   return (
     <>
@@ -123,12 +126,17 @@ export default function Home() {
           navigationItems={navigationItems} 
           activeSection={activeSection}
           scrollProgress={scrollProgress}
+          onNavClick={handleNavClick}  {/* 👈 Pass the navigation handler */}
+          onMobileMenuToggle={toggleMobileMenu}  {/* 👈 Pass the toggle handler */}
+          isMobileMenuOpen={isMobileMenuOpen}
         />
         
         <div className={styles.mainLayout}>
           <Sidebar 
             sections={sidebarSections} 
             activeSection={activeSection}
+            onNavClick={handleNavClick}  {/* 👈 Pass the navigation handler */}
+            isMobileMenuOpen={isMobileMenuOpen}
           />
           
           <main className={styles.content}>
@@ -141,6 +149,14 @@ export default function Home() {
           </main>
         </div>
       </div>
+      
+      {/* Mobile overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className={styles.mobileOverlay}
+          onClick={toggleMobileMenu}
+        />
+      )}
     </>
   );
 }
