@@ -1,3 +1,4 @@
+/* QuickLinks Grid Layout */
 .quickLinks {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -5,6 +6,7 @@
   margin-bottom: 4rem;
 }
 
+/* Individual Quick Link Cards */
 .quickLink {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -22,6 +24,7 @@
   overflow: hidden;
 }
 
+/* Top accent bar animation */
 .quickLink::before {
   content: '';
   position: absolute;
@@ -34,6 +37,7 @@
   transition: transform var(--transition-normal);
 }
 
+/* Hover effects */
 .quickLink:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
@@ -44,6 +48,7 @@
   transform: scaleX(1);
 }
 
+/* Icon styling */
 .quickLink i {
   font-size: 2rem;
   color: var(--accent);
@@ -54,6 +59,7 @@
   transform: scale(1.1);
 }
 
+/* Typography */
 .quickLink h3 {
   margin: 0;
   font-weight: 600;
@@ -68,29 +74,93 @@
   line-height: 1.4;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .quickLinks {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
+/* Wally Text Logo */
+.wallyText {
+  /* Font stack that closely matches Wally's logo */
+  font-family: 
+    'Nunito', 
+    'Poppins', 
+    'Montserrat', 
+    'Inter', 
+    'SF Pro Display', 
+    -apple-system, 
+    BlinkMacSystemFont, 
+    'Segoe UI', 
+    system-ui, 
+    sans-serif;
   
-  .quickLink {
-    padding: 1.5rem;
-  }
+  /* Typography styling to match Wally's look */
+  font-size: 1.8rem;
+  font-weight: 800; /* Extra bold */
+  letter-spacing: -0.02em; /* Tight letter spacing */
   
-  .quickLink i {
-    font-size: 1.5rem;
+  /* Visual effects */
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  /* Layout - consistent with icon sizing */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  line-height: 1;
+  
+  /* Transitions */
+  transition: all var(--transition-normal);
+}
+
+/* Fallback for browsers that don't support background-clip */
+@supports not (-webkit-background-clip: text) {
+  .wallyText {
+    color: #1976d2;
+    background: none;
+    -webkit-text-fill-color: unset;
   }
 }
 
-/* Focus states for accessibility */
-.quickLink:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* Wally text hover effect */
+.quickLink:hover .wallyText {
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 
-/* Animation for better UX */
+/* Alternative Wally style (if you prefer the background version) */
+.wallyTextAlt {
+  font-family: 
+    'Nunito', 
+    'Poppins', 
+    'Montserrat', 
+    'Inter', 
+    'SF Pro Display', 
+    -apple-system, 
+    BlinkMacSystemFont, 
+    'Segoe UI', 
+    system-ui, 
+    sans-serif;
+  
+  font-size: 1.6rem;
+  font-weight: 900; /* Black weight */
+  letter-spacing: -0.03em;
+  color: #1976d2;
+  
+  /* Rounded appearance like the logo */
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  background: rgba(25, 118, 210, 0.1);
+  
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-align: center;
+  
+  transition: all var(--transition-normal);
+}
+
+/* Staggered animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -106,14 +176,58 @@
   animation: fadeInUp 0.3s ease-out;
 }
 
-.quickLink:nth-child(2) {
-  animation-delay: 0.1s;
+.quickLink:nth-child(1) { animation-delay: 0s; }
+.quickLink:nth-child(2) { animation-delay: 0.1s; }
+.quickLink:nth-child(3) { animation-delay: 0.2s; }
+.quickLink:nth-child(4) { animation-delay: 0.3s; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .quickLinks {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .quickLink {
+    padding: 1.5rem;
+  }
+  
+  .quickLink i {
+    font-size: 1.5rem;
+  }
+  
+  .wallyText {
+    font-size: 1.5rem;
+  }
 }
 
-.quickLink:nth-child(3) {
-  animation-delay: 0.2s;
+/* Accessibility */
+.quickLink:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-.quickLink:nth-child(4) {
-  animation-delay: 0.3s;
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .quickLink {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .quickLink:hover {
+    transform: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .quickLink {
+    border: 2px solid var(--text-primary);
+  }
+  
+  .wallyText {
+    color: var(--text-primary) !important;
+    background: none !important;
+    -webkit-text-fill-color: unset !important;
+  }
 }
