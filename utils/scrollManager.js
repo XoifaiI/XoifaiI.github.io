@@ -1,9 +1,10 @@
-// Simple Scroll Manager - Fixed header/sidebar + progress bar
+// Simple Scroll Manager - No dynamic lighting
 // Create this file as: utils/scrollManager.js
 
 class ScrollManager {
   constructor() {
     this.isNavigating = false;
+    this.scrollTimeout = null;
     this.init();
   }
 
@@ -28,17 +29,18 @@ class ScrollManager {
         if (targetElement) {
           this.isNavigating = true;
           
-          // Scroll to element with offset for fixed header
-          const headerHeight = 70;
-          const elementTop = targetElement.offsetTop - headerHeight;
+          // Add smooth scroll class temporarily
+          document.documentElement.classList.add('smooth-scroll');
           
-          window.scrollTo({
-            top: elementTop,
-            behavior: 'smooth'
+          // Scroll to element
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
           });
           
-          // Reset navigation flag
+          // Remove smooth scroll class after navigation
           setTimeout(() => {
+            document.documentElement.classList.remove('smooth-scroll');
             this.isNavigating = false;
           }, 1000);
           
@@ -51,7 +53,7 @@ class ScrollManager {
     });
   }
 
-  // Setup scroll progress bar
+  // Enhanced scroll progress with smooth updates
   setupScrollProgress() {
     let ticking = false;
     
@@ -80,8 +82,7 @@ class ScrollManager {
   // Setup header scroll effects
   setupHeaderEffects() {
     const header = document.querySelector('.header');
-    if (!header) return;
-    
+    let lastScrollY = window.pageYOffset;
     let ticking = false;
 
     const updateHeader = () => {
@@ -89,11 +90,12 @@ class ScrollManager {
       
       // Add scrolled class when scrolled down
       if (currentScrollY > 50) {
-        header.classList.add('scrolled');
+        header?.classList.add('scrolled');
       } else {
-        header.classList.remove('scrolled');
+        header?.classList.remove('scrolled');
       }
       
+      lastScrollY = currentScrollY;
       ticking = false;
     };
     
@@ -127,9 +129,31 @@ class ScrollManager {
     window.addEventListener('scroll', () => {
       if (userScrolled && this.isNavigating) {
         this.isNavigating = false;
+        document.documentElement.classList.remove('smooth-scroll');
         userScrolled = false;
       }
     }, { passive: true });
+  }
+
+  // Utility method to scroll to element without conflicts
+  scrollToElement(elementId, offset = 0) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    this.isNavigating = true;
+    document.documentElement.classList.add('smooth-scroll');
+
+    const elementTop = element.offsetTop - offset;
+    
+    window.scrollTo({
+      top: elementTop,
+      behavior: 'smooth'
+    });
+
+    setTimeout(() => {
+      document.documentElement.classList.remove('smooth-scroll');
+      this.isNavigating = false;
+    }, 800);
   }
 }
 
@@ -144,17 +168,13 @@ class MobileMenu {
   }
 
   setupMobileMenu() {
-    // Create overlay if it doesn't exist
-    let overlay = document.querySelector('.sidebarOverlay');
-    if (!overlay) {
-      overlay = this.createOverlay();
-    }
-
-    // Mobile menu toggle button
+    // Mobile menu toggle
     const mobileMenuBtn = document.querySelector('.mobileMenuBtn');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebarOverlay') || this.createOverlay();
+
     if (mobileMenuBtn) {
-      mobileMenuBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+      mobileMenuBtn.addEventListener('click', () => {
         this.toggleMobileMenu();
       });
     }
@@ -180,13 +200,6 @@ class MobileMenu {
         this.closeMobileMenu();
       }
     });
-
-    // Close menu with escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        this.closeMobileMenu();
-      }
-    });
   }
 
   createOverlay() {
@@ -200,16 +213,14 @@ class MobileMenu {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.sidebarOverlay');
     
-    if (sidebar && overlay) {
-      const isOpen = sidebar.classList.contains('mobileOpen');
-      
-      if (isOpen) {
-        this.closeMobileMenu();
-      } else {
-        sidebar.classList.add('mobileOpen');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      }
+    sidebar?.classList.toggle('mobileOpen');
+    overlay?.classList.toggle('active');
+    
+    // Prevent body scroll when menu is open
+    if (sidebar?.classList.contains('mobileOpen')) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
   }
 
@@ -217,41 +228,24 @@ class MobileMenu {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.sidebarOverlay');
     
-    if (sidebar) sidebar.classList.remove('mobileOpen');
-    if (overlay) overlay.classList.remove('active');
+    sidebar?.classList.remove('mobileOpen');
+    overlay?.classList.remove('active');
     document.body.style.overflow = '';
   }
 }
 
 // Initialize everything when DOM is ready
-function initializeScrollManager() {
-  console.log('🚀 Initializing scroll manager...');
-  
-  window.scrollManager = new ScrollManager();
-  window.mobileMenu = new MobileMenu();
-  
-  // Add global mobile menu toggle function
-  window.toggleMobileMenu = () => {
-    window.mobileMenu.toggleMobileMenu();
-  };
-  
-  console.log('✅ Scroll manager initialized!');
+if (typeof window !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    window.scrollManager = new ScrollManager();
+    window.mobileMenu = new MobileMenu();
+    
+    // Add global mobile menu toggle function
+    window.toggleMobileMenu = () => {
+      window.mobileMenu.toggleMobileMenu();
+    };
+  });
 }
-
-// Multiple initialization methods for compatibility
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeScrollManager);
-} else {
-  // DOM is already loaded
-  initializeScrollManager();
-}
-
-// Fallback for older browsers
-window.addEventListener('load', () => {
-  if (!window.scrollManager) {
-    initializeScrollManager();
-  }
-});
 
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
