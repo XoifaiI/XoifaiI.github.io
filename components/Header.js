@@ -1,9 +1,17 @@
+// Step 1: Add debugging to your Header component
 import { memo, useState, useCallback, useEffect } from 'react';
-import styles from './Header.module.css';
+import styles from './Header.module.css'; // ← CHECK THIS PATH!
 
 const Header = memo(({ navigationItems, activeSection, scrollProgress, onMobileMenuToggle }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // 🚨 DEBUG: Add this to see if styles are loading
+  useEffect(() => {
+    console.log('🔍 DEBUG - Header styles object:', styles);
+    console.log('🔍 DEBUG - Header styles.header:', styles.header);
+    console.log('🔍 DEBUG - All style keys:', Object.keys(styles));
+  }, []);
 
   // Handle scroll effects
   useEffect(() => {
@@ -11,7 +19,6 @@ const Header = memo(({ navigationItems, activeSection, scrollProgress, onMobileM
       const scrollPosition = window.scrollY;
       setIsScrolled(scrollPosition > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -33,7 +40,6 @@ const Header = memo(({ navigationItems, activeSection, scrollProgress, onMobileM
     const newState = !isMobileMenuOpen;
     setIsMobileMenuOpen(newState);
     
-    // Call parent callback if provided
     if (onMobileMenuToggle) {
       onMobileMenuToggle(newState);
     }
@@ -52,7 +58,7 @@ const Header = memo(({ navigationItems, activeSection, scrollProgress, onMobileM
 
     if (isMobileMenuOpen) {
       document.addEventListener('click', handleClickOutside);
-      document.body.style.overflow = 'hidden'; // Prevent body scroll on mobile
+      document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
@@ -65,7 +71,19 @@ const Header = memo(({ navigationItems, activeSection, scrollProgress, onMobileM
 
   return (
     <>
-      <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
+      {/* 🚨 DEBUG: Add inline styles to test if positioning works */}
+      <header 
+        className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          backgroundColor: 'rgba(255, 0, 0, 0.8)', // RED background for testing
+          height: '70px'
+        }}
+      >
         <div className={styles.headerContent}>
           <a href="#overview" className={styles.logo} onClick={(e) => handleNavClick(e, '#overview')}>
             <i className="fas fa-shield-alt" aria-hidden="true"></i>
@@ -113,5 +131,4 @@ const Header = memo(({ navigationItems, activeSection, scrollProgress, onMobileM
 });
 
 Header.displayName = 'Header';
-
 export default Header;
