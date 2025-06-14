@@ -1,0 +1,111 @@
+.codeSection {
+  margin-bottom: 4rem;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.codeExample {
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 2rem;
+  overflow: hidden;
+  transition: border-color var(--transition-normal);
+}
+
+.codeExample:hover {
+  border-color: var(--border-light);
+}
+
+.codeHeader {
+  background: var(--bg-tertiary);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.codeTitle {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.codeContent {
+  margin: 0;
+  padding: 1.5rem;
+  overflow-x: auto;
+  background: transparent;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  
+  /* Optimize scrolling performance */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.codeContent::-webkit-scrollbar {
+  height: 8px;
+}
+
+.codeContent::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+.codeContent::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.codeContent::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+.codeContent code {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', monospace;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .codeHeader {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .codeContent {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .codeContent {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Performance optimizations */
+.codeExample {
+  contain: layout style;
+}
+
+.codeContent {
+  contain: layout style paint;
+}
