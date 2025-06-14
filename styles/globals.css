@@ -80,13 +80,13 @@ html.smooth-scroll {
 @media (prefers-reduced-motion: reduce) {
   html,
   html.smooth-scroll {
-    scroll-behavior: auto;
+    scroll-behavior: auto !important;
   }
   
   * {
-    animation-duration: 0.01ms;
-    animation-iteration-count: 1;
-    transition-duration: 0.01ms;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
@@ -102,7 +102,7 @@ body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   
-  /* Account for fixed header - IMPORTANT! */
+  /* Account for fixed header */
   padding-top: 70px;
   margin: 0;
   
