@@ -102,8 +102,9 @@ body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   
-  /* Account for fixed header */
-  padding-top: 70px;
+  /* Account for fixed header - IMPORTANT! */
+  padding-top: 70px !important;
+  margin: 0 !important;
   
   /* Create space for animated background */
   position: relative;
