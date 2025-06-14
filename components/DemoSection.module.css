@@ -1,0 +1,212 @@
+.codeSection {
+  margin-bottom: 4rem;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.sectionDescription {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.demoSection {
+  background: var(--bg-card);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+  transition: border-color var(--transition-normal);
+}
+
+.demoSection:hover {
+  border-color: var(--border-light);
+}
+
+.demoTitle {
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.demoTitle i {
+  color: var(--accent);
+}
+
+.demoControls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  align-items: start;
+}
+
+.demoInputContainer {
+  flex: 1;
+}
+
+.demoButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 200px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.inputGroup label {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.demoInput,
+.demoSelect {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.8rem;
+  color: var(--text-primary);
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  transition: border-color var(--transition-normal);
+  resize: none;
+  font-size: 0.9rem;
+}
+
+.demoInput:focus,
+.demoSelect:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+.demoInput {
+  min-height: 100px;
+  line-height: 1.4;
+}
+
+.demoSelect {
+  cursor: pointer;
+}
+
+.demoOutput {
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  min-height: 100px;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  color: var(--success);
+  word-break: break-all;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .demoControls {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .demoButtonsContainer {
+    min-width: auto;
+  }
+  
+  .demoSection {
+    padding: 1.5rem;
+  }
+  
+  .demoTitle {
+    font-size: 1.1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .demoSection {
+    padding: 1rem;
+  }
+  
+  .demoInput,
+  .demoSelect,
+  .demoOutput {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  .demoOutput {
+    min-height: 80px;
+  }
+  
+  .demoButtonsContainer {
+    gap: 0.5rem;
+  }
+}
+
+/* Button styles within demo */
+.demoSection .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Loading state */
+.demoOutput.loading {
+  color: var(--warning);
+  font-style: italic;
+}
+
+.demoOutput.error {
+  color: var(--danger);
+}
+
+.demoOutput.success {
+  color: var(--success);
+}
+
+/* Animation for output changes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.demoOutput {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Accessibility improvements */
+.demoInput:focus,
+.demoSelect:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Performance optimizations */
+.demoSection {
+  contain: layout style;
+}
