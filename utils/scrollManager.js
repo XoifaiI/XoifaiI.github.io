@@ -1,4 +1,6 @@
 // Enhanced Scroll Manager - Dynamic lighting and smooth progress
+// Create this file as: utils/scrollManager.js
+
 class ScrollManager {
   constructor() {
     this.isNavigating = false;
