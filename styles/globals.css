@@ -67,14 +67,20 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   
-  /* Optimize scrolling */
-  scroll-behavior: smooth;
+  /* Fix scroll behavior */
+  scroll-behavior: auto;
   scroll-padding-top: 90px;
 }
 
+/* Custom smooth scroll for navigation only */
+html.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  html,
+  html.smooth-scroll {
+    scroll-behavior: auto !important;
   }
   
   * {
@@ -96,10 +102,126 @@ body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   
-  /* Subtle background pattern */
-  background-image: 
-    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
-  background-size: 20px 20px;
+  /* Account for fixed header */
+  padding-top: 70px;
+  
+  /* Create space for animated background */
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Amazing Animated Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    /* Animated gradient overlay */
+    radial-gradient(circle at 20% 50%, rgba(0, 112, 243, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 217, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 90%, rgba(0, 112, 243, 0.06) 0%, transparent 50%);
+  
+  /* Animated dot pattern */
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(0, 112, 243, 0.15) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(0, 217, 255, 0.08) 1px, transparent 1px);
+  
+  background-size: 
+    60px 60px,
+    80px 80px, 
+    40px 40px;
+  
+  /* Animated movement */
+  animation: backgroundFloat 20s ease-in-out infinite;
+  
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* Floating light effect */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    /* Moving light beams */
+    linear-gradient(45deg, transparent 30%, rgba(0, 112, 243, 0.03) 50%, transparent 70%),
+    linear-gradient(-45deg, transparent 30%, rgba(0, 217, 255, 0.02) 50%, transparent 70%);
+  
+  /* Continuous movement */
+  animation: lightSweep 15s linear infinite;
+  
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Background animations */
+@keyframes backgroundFloat {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg);
+    background-size: 60px 60px, 80px 80px, 40px 40px;
+  }
+  33% {
+    transform: translate(30px, -30px) rotate(1deg);
+    background-size: 65px 65px, 85px 85px, 45px 45px;
+  }
+  66% {
+    transform: translate(-20px, 20px) rotate(-1deg);
+    background-size: 55px 55px, 75px 75px, 35px 35px;
+  }
+}
+
+@keyframes lightSweep {
+  0% {
+    transform: translateX(-100%) translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Particle effects for sections */
+.content section:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(0, 112, 243, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.03) 0%, transparent 50%);
+  animation: sectionGlow 2s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+@keyframes sectionGlow {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
 }
 
 /* Improve focus accessibility with modern styling */
@@ -329,6 +451,11 @@ img {
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none !important;
+  }
+  
   .btn,
   section[id],
   .api-category[id] {
@@ -337,6 +464,10 @@ img {
   
   .btn::before {
     display: none;
+  }
+  
+  .content section:hover::before {
+    animation: none !important;
   }
 }
 
@@ -348,5 +479,10 @@ img {
     --bg-primary: #000000;
     --bg-secondary: #000000;
     --border: #ffffff;
+  }
+  
+  body::before,
+  body::after {
+    display: none;
   }
 }
