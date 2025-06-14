@@ -25,7 +25,8 @@
   min-height: calc(100vh - 70px);
   max-width: 1600px;
   margin: 0 auto;
-  padding-left: 300px;
+  padding-left: 300px !important;
+  position: relative;
 }
 
 .content {
