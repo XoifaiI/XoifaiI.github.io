@@ -119,27 +119,30 @@ export default function Home() {
       </Head>
 
       <div className={styles.app}>
+        {/* FIXED HEADER - positioned at top level */}
         <Header 
           navigationItems={navigationItems} 
           activeSection={activeSection}
           scrollProgress={scrollProgress}
         />
         
-        <div className={styles.mainLayout}>
-          <Sidebar 
-            sections={sidebarSections} 
-            activeSection={activeSection}
-          />
-          
-          <main className={styles.content}>
+        {/* FIXED SIDEBAR - positioned at top level, sibling to header */}
+        <Sidebar 
+          sections={sidebarSections} 
+          activeSection={activeSection}
+        />
+        
+        {/* MAIN CONTENT - with proper margins/padding for fixed elements */}
+        <main className={styles.mainLayout}>
+          <div className={styles.content}>
             <HeroSection />
             <QuickLinks />
             <InstallationSection />
             <ApiReference />
             <DemoSection />
             <Credits />
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
     </>
   );
