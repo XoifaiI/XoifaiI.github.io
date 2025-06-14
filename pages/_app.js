@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }) {
         document.head.appendChild(prismCore);
       }
     };
-
+    
     loadPrism();
 
     // Performance monitoring
