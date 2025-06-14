@@ -17,7 +17,7 @@ const QuickLinks = memo(() => {
     },
     {
       href: 'https://wally.run/package/daily3014/cryptography',
-      icon: 'fas fa-package',
+      icon: 'wally-text', // Special identifier for Wally text
       title: 'Wally Package',
       description: 'Install with Wally package manager',
     },
@@ -39,7 +39,12 @@ const QuickLinks = memo(() => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <i className={link.icon} aria-hidden="true"></i>
+          {/* Conditional rendering for Wally text vs Font Awesome icons */}
+          {link.icon === 'wally-text' ? (
+            <span className={styles.wallyText}>Wally</span>
+          ) : (
+            <i className={link.icon} aria-hidden="true"></i>
+          )}
           <h3>{link.title}</h3>
           <p>{link.description}</p>
         </a>
@@ -49,5 +54,4 @@ const QuickLinks = memo(() => {
 });
 
 QuickLinks.displayName = 'QuickLinks';
-
 export default QuickLinks;
