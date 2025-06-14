@@ -7,9 +7,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Uncomment and modify if deploying to a subdirectory
-  // basePath: '/your-repo-name',
-  // assetPrefix: '/your-repo-name/',
+  
+  // Remove basePath and assetPrefix for user GitHub Pages sites
+  // basePath and assetPrefix are only needed for project sites (username.github.io/repo-name)
   
   // Disable server-side features for static export
   eslint: {
