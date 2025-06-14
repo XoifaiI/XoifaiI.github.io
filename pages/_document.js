@@ -29,35 +29,7 @@ export default function Document() {
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
         
-        {/*
-        <style jsx>{`
-          /* Critical CSS for above-the-fold content */
-          * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-          }
-          
-          :root {
-            --bg-primary: #0b0b0b;
-            --bg-secondary: #151515;
-            --text-primary: #ffffff;
-            --accent: #4285f4;
-          }
-          
-          html {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            scroll-behavior: smooth;
-          }
-          
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-          }
-        `}</style>*/}
+        {/* REMOVED: Critical CSS inline styles to test if they were causing conflicts */}
       </Head>
       <body>
         <Main />
