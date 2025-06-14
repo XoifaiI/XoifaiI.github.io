@@ -4,33 +4,39 @@ import styles from './Sidebar.module.css';
 const Sidebar = memo(({ sections, activeSection }) => {
   const handleNavClick = useCallback((e, href) => {
     e.preventDefault();
+    console.log('Clicked href:', href);
+    console.log('Current activeSection:', activeSection);
+    console.log('Comparison result:', activeSection === href.slice(1));
+    
     const target = document.querySelector(href);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, []);
+  }, [activeSection]);
 
   return (
     <aside className={styles.sidebar} id="sidebar">
       {sections.map((section, index) => (
         <div key={index} className={styles.sidebarSection}>
-          {/* Changed from sidebarTitle to sectionHeader to match CSS */}
           <div className={styles.sectionHeader}>{section.title}</div>
           
-          {/* Changed to nav element and removed ul/li structure */}
           <nav className={styles.sidebarNav}>
-            {section.items.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className={`${styles.navLink} ${activeSection === item.href.slice(1) ? styles.active : ''}`}
-                onClick={(e) => handleNavClick(e, item.href)}
-              >
-                {/* Add icon support */}
-                {item.icon && <i className={`${styles.navIcon} ${item.icon}`}></i>}
-                {item.label}
-              </a>
-            ))}
+            {section.items.map((item) => {
+              const isActive = activeSection === item.href.slice(1);
+              console.log(`Item: ${item.label}, href: ${item.href}, activeSection: ${activeSection}, isActive: ${isActive}`);
+              
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`${styles.navLink} ${isActive ? styles.active : ''}`}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                >
+                  {item.icon && <i className={`${styles.navIcon} ${item.icon}`}></i>}
+                  {item.label}
+                </a>
+              );
+            })}
           </nav>
         </div>
       ))}
