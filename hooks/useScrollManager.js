@@ -1,123 +1,223 @@
+// hooks/useScrollManager.js - UNIFIED SOLUTION
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 export function useScrollManager() {
-  const [activeSection, setActiveSection] = useState(null);
+  const [activeSection, setActiveSection] = useState('overview'); // Default to overview
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  const isScrollingRef = useRef(false);
+  const isNavigatingRef = useRef(false);
   const lastScrollTimeRef = useRef(0);
   const timeoutRef = useRef(null);
 
-  // Optimized scroll handler with throttling
+  // Define all possible sections in order
+  const sections = [
+    'overview',
+    'installation', 
+    'quick-start',
+    'hashing',
+    'encryption',
+    'signatures', 
+    'utilities',
+    'checksums',
+    'demo'
+  ];
+
+  // Throttled scroll handler for better performance
   const handleScroll = useCallback(() => {
     const now = performance.now();
-    if (now - lastScrollTimeRef.current < 16) return; // 60fps limit
+    if (now - lastScrollTimeRef.current < 16) return; // 60fps throttle
     lastScrollTimeRef.current = now;
 
-    if (isScrollingRef.current) return;
-    isScrollingRef.current = true;
+    // Skip during programmatic navigation to prevent conflicts
+    if (isNavigatingRef.current) return;
 
-    // Calculate scroll progress
     const scrollTop = window.pageYOffset;
-    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = Math.min((scrollTop / scrollHeight) * 100, 100);
+    const windowHeight = window.innerHeight;
+    
+    // Calculate scroll progress
+    const scrollHeight = document.documentElement.scrollHeight - windowHeight;
+    const progress = Math.min(Math.max((scrollTop / scrollHeight) * 100, 0), 100);
     setScrollProgress(progress);
+    
+    // Update CSS custom property for progress bar
+    document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
 
-    // Find active section
-    const sections = document.querySelectorAll('section[id], .api-category[id]');
-    let newActiveSection = null;
-
-    for (let i = sections.length - 1; i >= 0; i--) {
-      const section = sections[i];
-      const rect = section.getBoundingClientRect();
-      if (rect.top <= 100) {
-        newActiveSection = section.id;
-        break;
+    // Find active section using intersection-based logic
+    let newActiveSection = 'overview'; // Default fallback
+    
+    for (const sectionId of sections) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        // Section is active if it's in the top 40% of viewport
+        if (rect.top <= windowHeight * 0.4 && rect.bottom >= 0) {
+          newActiveSection = sectionId;
+        }
       }
     }
-
-    if (newActiveSection && newActiveSection !== activeSection) {
+    
+    // Only update if section actually changed
+    if (newActiveSection !== activeSection) {
       setActiveSection(newActiveSection);
+      console.log('🎯 Active section changed to:', newActiveSection);
     }
+  }, [activeSection, sections]);
 
-    isScrollingRef.current = false;
-  }, [activeSection]);
-
-  // Optimized resize handler
-  const handleResize = useCallback(() => {
-    if (window.innerWidth > 1024) {
-      setIsMobileMenuOpen(false);
-    }
-  }, []);
-
-  // Smooth scroll to section
+  // Smooth scroll to section with conflict prevention
   const scrollToSection = useCallback((sectionId) => {
-    const target = document.querySelector(sectionId);
-    if (target) {
-      target.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start',
-        inline: 'nearest'
-      });
-      setIsMobileMenuOpen(false);
+    console.log('🔗 Scrolling to section:', sectionId);
+    
+    // Clean the section ID (remove # if present)
+    const targetId = sectionId.startsWith('#') ? sectionId.slice(1) : sectionId;
+    const target = document.getElementById(targetId);
+    
+    if (!target) {
+      console.log('❌ Target not found:', targetId);
+      return;
     }
+
+    // Set navigation flag to prevent conflicts
+    isNavigatingRef.current = true;
+    
+    // Add smooth scroll class
+    document.documentElement.classList.add('smooth-scroll');
+    
+    // Perform smooth scroll
+    target.scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'start',
+      inline: 'nearest'
+    });
+    
+    // Update active section immediately for responsive UI
+    setActiveSection(targetId);
+    
+    // Close mobile menu if open
+    setIsMobileMenuOpen(false);
+    
+    // Update URL without jumping
+    if (window.history && window.history.pushState) {
+      window.history.pushState(null, null, `#${targetId}`);
+    }
+    
+    // Reset navigation flag after scroll completes
+    setTimeout(() => {
+      document.documentElement.classList.remove('smooth-scroll');
+      isNavigatingRef.current = false;
+      console.log('✅ Navigation complete to:', targetId);
+    }, 1000);
   }, []);
+
+  // Handle navigation clicks
+  const handleNavClick = useCallback((e, href) => {
+    e.preventDefault();
+    scrollToSection(href);
+  }, [scrollToSection]);
 
   // Mobile menu toggle
   const toggleMobileMenu = useCallback(() => {
-    setIsMobileMenuOpen(prev => !prev);
+    setIsMobileMenuOpen(prev => {
+      const newState = !prev;
+      
+      // Prevent body scroll when menu is open
+      if (newState) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+      
+      console.log('📱 Mobile menu toggled:', newState);
+      return newState;
+    });
   }, []);
 
-  // Click handler for navigation
-  const handleNavClick = useCallback((e) => {
-    // Close mobile menu when clicking outside
-    if (isMobileMenuOpen) {
-      const sidebar = document.getElementById('sidebar');
-      const mobileBtn = document.querySelector('.mobile-menu-btn');
-      
-      if (sidebar && !sidebar.contains(e.target) && 
-          (!mobileBtn || !mobileBtn.contains(e.target))) {
-        setIsMobileMenuOpen(false);
+  // Handle resize to close mobile menu on desktop
+  const handleResize = useCallback(() => {
+    if (window.innerWidth > 1024 && isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+      document.body.style.overflow = '';
+    }
+  }, [isMobileMenuOpen]);
+
+  // Handle clicks outside mobile menu
+  const handleDocumentClick = useCallback((e) => {
+    if (!isMobileMenuOpen) return;
+    
+    const sidebar = document.getElementById('sidebar');
+    const mobileBtn = document.querySelector('.mobileMenuBtn, [class*="mobileMenuBtn"]');
+    
+    if (sidebar && !sidebar.contains(e.target) && 
+        (!mobileBtn || !mobileBtn.contains(e.target))) {
+      setIsMobileMenuOpen(false);
+      document.body.style.overflow = '';
+    }
+  }, [isMobileMenuOpen]);
+
+  // Handle header scroll effects
+  const updateHeaderEffects = useCallback(() => {
+    const header = document.querySelector('[class*="header"]');
+    if (header) {
+      if (window.pageYOffset > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
       }
     }
+  }, []);
 
-    // Handle anchor navigation
-    const anchor = e.target.closest('a[href^="#"]');
-    if (anchor) {
-      e.preventDefault();
-      const href = anchor.getAttribute('href');
-      if (href && href !== '#') {
-        scrollToSection(href);
-      }
-    }
-  }, [isMobileMenuOpen, scrollToSection]);
-
+  // Main effect - setup all event listeners
   useEffect(() => {
-    // Add event listeners with passive option for better performance
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize, { passive: true });
-    document.addEventListener('click', handleNavClick);
+    console.log('🚀 ScrollManager initialized');
+    
+    // Combined scroll handler
+    const scrollHandler = () => {
+      handleScroll();
+      updateHeaderEffects();
+    };
 
-    // Set initial active section
-    if (typeof window !== 'undefined') {
-      const overview = document.querySelector('#overview');
-      if (overview) {
-        setActiveSection('overview');
-      }
+    // Add event listeners with passive option for better performance
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
+    document.addEventListener('click', handleDocumentClick);
+
+    // Set initial active section from URL hash or default
+    const initialSection = window.location.hash ? 
+      window.location.hash.slice(1) : 'overview';
+    
+    if (sections.includes(initialSection)) {
+      setActiveSection(initialSection);
     }
+
+    // Initial scroll progress and header state
+    handleScroll();
+    updateHeaderEffects();
 
     // Cleanup function
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', scrollHandler);
       window.removeEventListener('resize', handleResize);
-      document.removeEventListener('click', handleNavClick);
+      document.removeEventListener('click', handleDocumentClick);
       
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      
+      // Reset body overflow
+      document.body.style.overflow = '';
+      
+      console.log('🧹 ScrollManager cleaned up');
     };
-  }, [handleScroll, handleResize, handleNavClick]);
+  }, [handleScroll, handleResize, handleDocumentClick, updateHeaderEffects, sections]);
+
+  // Debug logging effect
+  useEffect(() => {
+    console.log('📊 ScrollManager State:', {
+      activeSection,
+      scrollProgress: Math.round(scrollProgress),
+      isMobileMenuOpen
+    });
+  }, [activeSection, scrollProgress, isMobileMenuOpen]);
 
   return {
     activeSection,
@@ -125,5 +225,6 @@ export function useScrollManager() {
     isMobileMenuOpen,
     toggleMobileMenu,
     scrollToSection,
+    handleNavClick, // Export for easy use in components
   };
 }
