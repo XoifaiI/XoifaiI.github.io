@@ -1,5 +1,5 @@
 /* Demo Components Spacing Fixes */
-/* Add this to your main CSS file or create components/Demo.module.css */
+/* Create this file as: components/Demo.module.css */
 
 .demoContainer {
   background: var(--bg-card);
