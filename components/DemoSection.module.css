@@ -72,10 +72,26 @@
   color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-all;
-  min-height: 0;
-  vertical-align: top;
-  text-align: left;
+  /* AGGRESSIVE FIX: Force top alignment with !important */
+  min-height: 0 !important;
+  display: block !important;
+  vertical-align: top !important;
+  text-align: left !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
   box-sizing: border-box;
+}
+
+/* Target by ID as well for higher specificity */
+#hash-output,
+#base64-output {
+  min-height: 0 !important;
+  display: block !important;
+  vertical-align: top !important;
+  text-align: left !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  padding-top: 1rem !important;
 }
 
 .demoButtons {
@@ -123,6 +139,7 @@
   border-color: var(--accent);
 }
 
+/* Hash output styling - AGGRESSIVE ALIGNMENT FIX */
 .hashOutput {
   font-family: var(--font-mono);
   word-break: break-all;
@@ -133,8 +150,10 @@
   border-radius: 8px;
   margin: 1rem 0;
   min-height: auto;
-  vertical-align: top;
-  text-align: left;
+  /* AGGRESSIVE FIX: Force top alignment */
+  display: block !important;
+  vertical-align: top !important;
+  text-align: left !important;
   box-sizing: border-box;
 }
 
@@ -157,6 +176,7 @@
   padding: 0;
 }
 
+/* Base64 output styling - AGGRESSIVE ALIGNMENT FIX */
 .base64Output {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -164,8 +184,10 @@
   padding: 1.25rem;
   margin: 1rem 0;
   min-height: auto;
-  vertical-align: top;
-  text-align: left;
+  /* AGGRESSIVE FIX: Force top alignment */
+  display: block !important;
+  vertical-align: top !important;
+  text-align: left !important;
   box-sizing: border-box;
 }
 
