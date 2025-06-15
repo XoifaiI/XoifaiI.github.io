@@ -1,5 +1,3 @@
-/* CLEAN HEADER.MODULE.CSS - NO DUPLICATES */
-
 /* Main header container */
 .header {
   background: rgba(0, 0, 0, 0.8);
@@ -8,7 +6,6 @@
   border-bottom: 1px solid var(--border);
   padding: 0;
   
-  /* CRITICAL: Fixed positioning to stay at top */
   position: fixed;
   top: 0;
   left: 0;
