@@ -1,6 +1,3 @@
-/* Demo Components Spacing Fixes */
-/* Create this file as: components/Demo.module.css */
-
 .demoContainer {
   background: var(--bg-card);
   border: 1px solid var(--border);
