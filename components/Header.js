@@ -5,12 +5,10 @@ const Header = memo(({
   navigationItems, 
   activeSection, 
   scrollProgress, 
-  onNavClick,  // 👈 Navigation handler from useScrollManager
+  onNavClick,
   onMobileMenuToggle,
   isMobileMenuOpen 
 }) => {
-  console.log('🎯 Header render - activeSection:', activeSection);
-
   return (
     <header className={`${styles.header} ${scrollProgress > 5 ? styles.scrolled : ''}`}>
       <div className={styles.headerContent}>
@@ -28,8 +26,6 @@ const Header = memo(({
         <nav className={styles.navLinks}>
           {navigationItems?.map((item) => {
             const isActive = activeSection === item.href.slice(1);
-            console.log(`📋 Header Item: ${item.label}, href: ${item.href}, activeSection: ${activeSection}, isActive: ${isActive}`);
-            
             return (
               <a
                 key={item.href}
