@@ -65,11 +65,14 @@ export function useDemoHandlers() {
           hash = CryptoJS.SHA256(input).toString();
       }
 
+      // FIXED: Wrap content in a div with explicit top alignment
       output.innerHTML = `
-        <strong style="color: var(--accent)">${algorithm.toUpperCase()}:</strong><br>
-        <span style="color: var(--success); word-break: break-all; font-family: monospace; font-size: 0.85rem;">
-          ${hash}
-        </span>
+        <div style="display: block; text-align: left; vertical-align: top; padding: 0; margin: 0; line-height: 1.5;">
+          <strong style="color: var(--accent)">${algorithm.toUpperCase()}:</strong><br>
+          <span style="color: var(--success); word-break: break-all; font-family: monospace; font-size: 0.85rem;">
+            ${hash}
+          </span>
+        </div>
       `;
     } catch (error) {
       console.error('Hash error:', error);
@@ -91,11 +94,15 @@ export function useDemoHandlers() {
     try {
       // Handle UTF-8 encoding properly
       const encoded = btoa(unescape(encodeURIComponent(input)));
+      
+      // FIXED: Wrap content in a div with explicit top alignment
       output.innerHTML = `
-        <strong style="color: var(--accent)">Base64 Encoded:</strong><br>
-        <span style="color: var(--success); word-break: break-all; font-family: monospace; font-size: 0.85rem;">
-          ${encoded}
-        </span>
+        <div style="display: block; text-align: left; vertical-align: top; padding: 0; margin: 0; line-height: 1.5;">
+          <strong style="color: var(--accent)">Base64 Encoded:</strong><br>
+          <span style="color: var(--success); word-break: break-all; font-family: monospace; font-size: 0.85rem;">
+            ${encoded}
+          </span>
+        </div>
       `;
     } catch (error) {
       console.error('Base64 encode error:', error);
@@ -124,11 +131,15 @@ export function useDemoHandlers() {
       }
 
       const decoded = decodeURIComponent(escape(atob(cleanInput)));
+      
+      // FIXED: Wrap content in a div with explicit top alignment
       output.innerHTML = `
-        <strong style="color: var(--accent)">Decoded:</strong><br>
-        <span style="color: var(--success); font-family: monospace; white-space: pre-wrap;">
-          ${decoded}
-        </span>
+        <div style="display: block; text-align: left; vertical-align: top; padding: 0; margin: 0; line-height: 1.5;">
+          <strong style="color: var(--accent)">Decoded:</strong><br>
+          <span style="color: var(--success); font-family: monospace; white-space: pre-wrap;">
+            ${decoded}
+          </span>
+        </div>
       `;
     } catch (error) {
       console.error('Base64 decode error:', error);
