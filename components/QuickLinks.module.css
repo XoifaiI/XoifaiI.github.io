@@ -1,57 +1,212 @@
-import { memo } from 'react';
-import styles from './QuickLinks.module.css';
+/* QuickLinks Grid Layout */
+.quickLinks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
 
-const QuickLinks = memo(() => {
-  const links = [
-    {
-      href: 'https://devforum.roblox.com/t/fastest-cryptography-library-for-roblox/3680271',
-      icon: 'fab fa-discourse',
-      title: 'DevForum Documentation',
-      description: 'Complete documentation and community discussion',
-    },
-    {
-      href: 'https://github.com/daily3014/rbx-cryptography',
-      icon: 'fab fa-github',
-      title: 'GitHub Repository',
-      description: 'Source code, issues, and contributions',
-    },
-    {
-      href: 'https://wally.run/package/daily3014/cryptography',
-      icon: 'wally-text', // Special identifier for Wally text
-      title: 'Wally Package',
-      description: 'Install with Wally package manager',
-    },
-    {
-      href: 'https://pesde.dev/packages/daily3014/cryptography',
-      icon: 'fas fa-cube',
-      title: 'Pesde Package',
-      description: 'Install with Pesde package manager',
-    },
-  ];
+/* Individual Quick Link Cards */
+.quickLink {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
 
-  return (
-    <section className={styles.quickLinks}>
-      {links.map((link, index) => (
-        <a
-          key={index}
-          href={link.href}
-          className={styles.quickLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {/* Conditional rendering for Wally text vs Font Awesome icons */}
-          {link.icon === 'wally-text' ? (
-            <span className={styles.wallyText}>Wally</span>
-          ) : (
-            <i className={link.icon} aria-hidden="true"></i>
-          )}
-          <h3>{link.title}</h3>
-          <p>{link.description}</p>
-        </a>
-      ))}
-    </section>
-  );
-});
+/* Top accent bar animation */
+.quickLink::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform var(--transition-normal);
+}
 
-QuickLinks.displayName = 'QuickLinks';
-export default QuickLinks;
+/* Hover effects */
+.quickLink:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.quickLink:hover::before {
+  transform: scaleX(1);
+}
+
+/* Icon styling */
+.quickLink i {
+  font-size: 2rem;
+  color: var(--accent);
+  transition: transform var(--transition-normal);
+}
+
+.quickLink:hover i {
+  transform: scale(1.1);
+}
+
+/* Typography */
+.quickLink h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.quickLink p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Wally Text Logo */
+.wallyText {
+  font-family: 
+    'Nunito', 
+    'Poppins', 
+    'Montserrat', 
+    'Inter', 
+    'SF Pro Display', 
+    -apple-system, 
+    BlinkMacSystemFont, 
+    'Segoe UI', 
+    system-ui, 
+    sans-serif;
+  
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  line-height: 1;
+  
+  transition: all var(--transition-normal);
+}
+
+/* Wally text hover effect */
+.quickLink:hover .wallyText {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+/* Alternative Wally style */
+.wallyTextAlt {
+  font-family: 
+    'Nunito', 
+    'Poppins', 
+    'Montserrat', 
+    'Inter', 
+    'SF Pro Display', 
+    -apple-system, 
+    BlinkMacSystemFont, 
+    'Segoe UI', 
+    system-ui, 
+    sans-serif;
+  
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #1976d2;
+  
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  background: rgba(25, 118, 210, 0.1);
+  
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-align: center;
+  
+  transition: all var(--transition-normal);
+}
+
+/* Staggered animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quickLink {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.quickLink:nth-child(1) { animation-delay: 0s; }
+.quickLink:nth-child(2) { animation-delay: 0.1s; }
+.quickLink:nth-child(3) { animation-delay: 0.2s; }
+.quickLink:nth-child(4) { animation-delay: 0.3s; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .quickLinks {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .quickLink {
+    padding: 1.5rem;
+  }
+  
+  .quickLink i {
+    font-size: 1.5rem;
+  }
+  
+  .wallyText {
+    font-size: 1.5rem;
+  }
+}
+
+/* Accessibility */
+.quickLink:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .quickLink {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .quickLink:hover {
+    transform: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .quickLink {
+    border: 2px solid var(--text-primary);
+  }
+  
+  .wallyText {
+    color: var(--text-primary) !important;
+  }
+}
