@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+.next/
+out/
+
+# Build outputs
+build/
+dist/
+*.tsbuildinfo
+
+# Environment files
+.env*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Public assets
+public/
+
+# Service worker
+sw.js
+workbox-*.js
+
+# Config files
+next.config.js
+*.config.js
+
+# Lock files
+package-lock.json
+yarn.lock
