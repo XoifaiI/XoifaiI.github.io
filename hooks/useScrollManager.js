@@ -36,7 +36,7 @@ export function useScrollManager() {
     const progress = Math.min(Math.max((scrollTop / scrollHeight) * 100, 0), 100);
     setScrollProgress(progress);
     document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
-  }, []);
+  }, []); // No dependencies
 
   // Dead simple active section detection
   const updateActiveSection = useCallback(() => {
@@ -46,10 +46,8 @@ export function useScrollManager() {
     const windowHeight = window.innerHeight;
     
     // Special case: if we're at the very top, always show overview
-    if (scrollTop < 50) {
-      if (activeSection !== 'overview') {
-        setActiveSection('overview');
-      }
+    if (scrollTop <= 100) { // Increased threshold
+      setActiveSection('overview');
       return;
     }
     
@@ -73,17 +71,15 @@ export function useScrollManager() {
       }
     }
     
-    // Only update if changed
-    if (newActiveSection !== activeSection) {
-      setActiveSection(newActiveSection);
-    }
-  }, [activeSection, sections]);
+    // Always update, don't check if changed
+    setActiveSection(newActiveSection);
+  }, []); // Remove dependencies to prevent stale closures
 
   // Simple scroll handler
   const handleScroll = useCallback(() => {
     updateScrollProgress();
     updateActiveSection();
-  }, [updateScrollProgress, updateActiveSection]);
+  }, []); // Remove dependencies
 
   // Smooth scroll to section
   const scrollToSection = useCallback((sectionId) => {
@@ -117,13 +113,13 @@ export function useScrollManager() {
       isNavigatingRef.current = false;
       updateScrollProgress();
     }, 1000);
-  }, [updateScrollProgress]);
+  }, []); // No dependencies
 
   // Handle navigation clicks
   const handleNavClick = useCallback((e, href) => {
     e.preventDefault();
     scrollToSection(href);
-  }, [scrollToSection]);
+  }, []); // No dependencies
 
   // Mobile menu toggle
   const toggleMobileMenu = useCallback(() => {
@@ -141,7 +137,7 @@ export function useScrollManager() {
       document.body.style.overflow = '';
     }
     updateScrollProgress();
-  }, [isMobileMenuOpen, updateScrollProgress]);
+  }, [isMobileMenuOpen]); // Only include state that changes
 
   // Handle clicks outside mobile menu
   const handleDocumentClick = useCallback((e) => {
@@ -167,12 +163,13 @@ export function useScrollManager() {
         header.classList.remove('scrolled');
       }
     }
-  }, []);
+  }, []); // No dependencies
 
   // Setup everything
   useEffect(() => {
     const scrollHandler = () => {
-      handleScroll();
+      updateScrollProgress();
+      updateActiveSection();
       updateHeaderEffects();
     };
 
@@ -199,7 +196,7 @@ export function useScrollManager() {
       document.removeEventListener('click', handleDocumentClick);
       document.body.style.overflow = '';
     };
-  }, []); // Empty dependency array - run once
+  }, [handleResize, handleDocumentClick]); // Minimal dependencies
 
   return {
     activeSection,
