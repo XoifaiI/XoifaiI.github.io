@@ -44,25 +44,50 @@ export function useScrollManager() {
     document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
   }, []);
 
-  // Find and update active section
+  // Find and update active section with stable detection
   const updateActiveSection = useCallback(() => {
     const windowHeight = window.innerHeight;
-    let newActiveSection = 'overview'; // Default fallback
+    const viewportCenter = windowHeight / 2;
+    let bestSection = 'overview'; // Default fallback
+    let bestDistance = Infinity;
     
+    // Find the section closest to the viewport center
     for (const sectionId of sections) {
       const element = document.getElementById(sectionId);
       if (element) {
         const rect = element.getBoundingClientRect();
-        // Section is active if it's in the top 40% of viewport
-        if (rect.top <= windowHeight * 0.4 && rect.bottom >= 0) {
-          newActiveSection = sectionId;
+        
+        // Skip sections that are completely out of view
+        if (rect.bottom < 0 || rect.top > windowHeight) continue;
+        
+        // Calculate distance from section center to viewport center
+        const sectionCenter = rect.top + (rect.height / 2);
+        const distance = Math.abs(sectionCenter - viewportCenter);
+        
+        // Use the closest section to viewport center
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestSection = sectionId;
         }
       }
     }
     
-    // Only update if section actually changed
-    if (newActiveSection !== activeSection) {
-      setActiveSection(newActiveSection);
+    // Add hysteresis: only change if we're confident about the new section
+    // This prevents rapid switching between adjacent sections
+    if (bestSection !== activeSection) {
+      const currentElement = document.getElementById(activeSection);
+      if (currentElement) {
+        const currentRect = currentElement.getBoundingClientRect();
+        
+        // Stick with current section if it's still prominently visible
+        if (currentRect.top < windowHeight * 0.3 && currentRect.bottom > windowHeight * 0.2) {
+          // Current section is still well-positioned, don't switch yet
+          return;
+        }
+      }
+      
+      // Safe to switch to new section
+      setActiveSection(bestSection);
     }
   }, [activeSection, sections]);
 
