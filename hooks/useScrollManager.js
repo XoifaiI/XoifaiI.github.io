@@ -7,6 +7,7 @@ export function useScrollManager() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const isNavigatingRef = useRef(false);
+  const navigationTimeoutRef = useRef(null);
 
   // Define all possible sections in order
   const sections = [
@@ -40,7 +41,10 @@ export function useScrollManager() {
 
   // Dead simple active section detection
   const updateActiveSection = useCallback(() => {
-    if (isNavigatingRef.current) return; // Skip during navigation
+    // Double-check navigation state to prevent bouncing
+    if (isNavigatingRef.current) {
+      return; // Skip during navigation
+    }
     
     const scrollTop = window.pageYOffset;
     const windowHeight = window.innerHeight;
@@ -71,8 +75,10 @@ export function useScrollManager() {
       }
     }
     
-    // Always update, don't check if changed
-    setActiveSection(newActiveSection);
+    // Final check: don't update if we're still navigating
+    if (!isNavigatingRef.current) {
+      setActiveSection(newActiveSection);
+    }
   }, []); // Remove dependencies to prevent stale closures
 
   // Simple scroll handler
@@ -81,17 +87,22 @@ export function useScrollManager() {
     updateActiveSection();
   }, []); // Remove dependencies
 
-  // Smooth scroll to section
+  // Smooth scroll to section with better navigation blocking
   const scrollToSection = useCallback((sectionId) => {
     const targetId = sectionId.startsWith('#') ? sectionId.slice(1) : sectionId;
     const target = document.getElementById(targetId);
     
     if (!target) return;
 
-    // Block section detection during navigation
+    // Clear any existing navigation timeout
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+
+    // Block section detection during navigation IMMEDIATELY
     isNavigatingRef.current = true;
     
-    // Update active section immediately
+    // Update active section immediately to prevent bouncing
     setActiveSection(targetId);
     
     // Close mobile menu
@@ -102,17 +113,26 @@ export function useScrollManager() {
       window.history.pushState(null, null, `#${targetId}`);
     }
     
-    // Scroll smoothly
-    target.scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'start' 
-    });
-    
-    // Re-enable section detection after scroll
+    // Small delay to ensure the flag is set before scrolling starts
     setTimeout(() => {
-      isNavigatingRef.current = false;
-      updateScrollProgress();
-    }, 1000);
+      // Scroll smoothly
+      target.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+      
+      // Re-enable section detection after scroll completes
+      navigationTimeoutRef.current = setTimeout(() => {
+        isNavigatingRef.current = false;
+        updateScrollProgress();
+        // Force a final section update to make sure we're correct
+        setTimeout(() => {
+          if (!isNavigatingRef.current) {
+            updateActiveSection();
+          }
+        }, 100);
+      }, 1500); // Increased timeout for longer scrolls
+    }, 10); // Small delay to ensure flag is set
   }, []); // No dependencies
 
   // Handle navigation clicks
@@ -195,6 +215,11 @@ export function useScrollManager() {
       window.removeEventListener('resize', handleResize);
       document.removeEventListener('click', handleDocumentClick);
       document.body.style.overflow = '';
+      
+      // Clear navigation timeout
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
     };
   }, [handleResize, handleDocumentClick]); // Minimal dependencies
 
