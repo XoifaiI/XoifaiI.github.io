@@ -59,16 +59,11 @@
   outline: none;
 }
 
-/* UNIVERSAL FIXES - Target all possible selectors */
-.demoOutput,
-[class*="demoOutput"],
-[class*="demo-output"],
-#hash-output,
-#base64-output {
+.demoOutput {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 1rem !important;
+  padding: 1rem;
   margin: 0;
   line-height: 1.5;
   overflow-x: auto;
@@ -77,30 +72,11 @@
   color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-all;
-  /* FORCE TOP ALIGNMENT */
-  display: block !important;
-  min-height: 0 !important;
-  height: auto !important;
-  vertical-align: top !important;
-  text-align: left !important;
-  box-sizing: border-box !important;
-  /* Remove any flex centering */
-  align-items: stretch !important;
-  justify-content: flex-start !important;
-  align-content: flex-start !important;
-  /* Force padding to top */
-  padding-top: 1rem !important;
-  padding-bottom: 1rem !important;
-}
-
-/* Target child elements that might be causing centering */
-.demoOutput *,
-[class*="demoOutput"] *,
-[class*="demo-output"] *,
-#hash-output *,
-#base64-output * {
-  vertical-align: top !important;
-  text-align: left !important;
+  box-sizing: border-box;
+  /* Remove min-height that was causing centering */
+  min-height: 0;
+  /* Ensure block display */
+  display: block;
 }
 
 .demoButtons {
@@ -148,7 +124,7 @@
   border-color: var(--accent);
 }
 
-/* Hash output styling - AGGRESSIVE ALIGNMENT FIX */
+/* Hash output styling - SIMPLE FIX */
 .hashOutput {
   font-family: var(--font-mono);
   word-break: break-all;
@@ -159,10 +135,7 @@
   border-radius: 8px;
   margin: 1rem 0;
   min-height: auto;
-  /* AGGRESSIVE FIX: Force top alignment */
-  display: block !important;
-  vertical-align: top !important;
-  text-align: left !important;
+  display: block;
   box-sizing: border-box;
 }
 
@@ -185,7 +158,7 @@
   padding: 0;
 }
 
-/* Base64 output styling - AGGRESSIVE ALIGNMENT FIX */
+/* Base64 output styling - SIMPLE FIX */
 .base64Output {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -193,10 +166,7 @@
   padding: 1.25rem;
   margin: 1rem 0;
   min-height: auto;
-  /* AGGRESSIVE FIX: Force top alignment */
-  display: block !important;
-  vertical-align: top !important;
-  text-align: left !important;
+  display: block;
   box-sizing: border-box;
 }
 
