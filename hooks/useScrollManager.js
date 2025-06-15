@@ -23,27 +23,30 @@ export function useScrollManager() {
     'demo'
   ];
 
-  // Throttled scroll handler for better performance
-  const handleScroll = useCallback(() => {
-    const now = performance.now();
-    if (now - lastScrollTimeRef.current < 16) return; // 60fps throttle
-    lastScrollTimeRef.current = now;
-
-    // Skip during programmatic navigation to prevent conflicts
-    if (isNavigatingRef.current) return;
-
+  // Calculate and update scroll progress
+  const updateScrollProgress = useCallback(() => {
     const scrollTop = window.pageYOffset;
     const windowHeight = window.innerHeight;
-    
-    // Calculate scroll progress
     const scrollHeight = document.documentElement.scrollHeight - windowHeight;
+    
+    // Handle edge case where page is shorter than viewport
+    if (scrollHeight <= 0) {
+      setScrollProgress(0);
+      document.documentElement.style.setProperty('--scroll-progress', '0%');
+      return;
+    }
+    
+    // Calculate progress (0-100%)
     const progress = Math.min(Math.max((scrollTop / scrollHeight) * 100, 0), 100);
     setScrollProgress(progress);
     
     // Update CSS custom property for progress bar
     document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
+  }, []);
 
-    // Find active section using intersection-based logic
+  // Find and update active section
+  const updateActiveSection = useCallback(() => {
+    const windowHeight = window.innerHeight;
     let newActiveSection = 'overview'; // Default fallback
     
     for (const sectionId of sections) {
@@ -63,7 +66,22 @@ export function useScrollManager() {
     }
   }, [activeSection, sections]);
 
-  // Smooth scroll to section with conflict prevention
+  // Throttled scroll handler for better performance
+  const handleScroll = useCallback(() => {
+    const now = performance.now();
+    if (now - lastScrollTimeRef.current < 16) return; // 60fps throttle
+    lastScrollTimeRef.current = now;
+
+    // Always update scroll progress (even during navigation)
+    updateScrollProgress();
+
+    // Only skip section detection during navigation to prevent conflicts
+    if (!isNavigatingRef.current) {
+      updateActiveSection();
+    }
+  }, [updateScrollProgress, updateActiveSection]);
+
+  // Smooth scroll to section with immediate progress update
   const scrollToSection = useCallback((sectionId) => {
     // Clean the section ID (remove # if present)
     const targetId = sectionId.startsWith('#') ? sectionId.slice(1) : sectionId;
@@ -73,18 +91,11 @@ export function useScrollManager() {
       return;
     }
 
-    // Set navigation flag to prevent conflicts
+    // Set navigation flag to prevent section detection conflicts
     isNavigatingRef.current = true;
     
     // Add smooth scroll class
     document.documentElement.classList.add('smooth-scroll');
-    
-    // Perform smooth scroll
-    target.scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'start',
-      inline: 'nearest'
-    });
     
     // Update active section immediately for responsive UI
     setActiveSection(targetId);
@@ -97,12 +108,34 @@ export function useScrollManager() {
       window.history.pushState(null, null, `#${targetId}`);
     }
     
-    // Reset navigation flag after scroll completes
+    // Perform smooth scroll
+    target.scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'start',
+      inline: 'nearest'
+    });
+    
+    // Force immediate progress update
+    setTimeout(() => {
+      updateScrollProgress();
+    }, 50);
+    
+    // Set up progress tracking during scroll
+    const progressUpdateInterval = setInterval(() => {
+      updateScrollProgress();
+    }, 50);
+    
+    // Reset navigation flag after scroll completes (reduced timeout)
     setTimeout(() => {
       document.documentElement.classList.remove('smooth-scroll');
       isNavigatingRef.current = false;
-    }, 1000);
-  }, []);
+      clearInterval(progressUpdateInterval);
+      
+      // Final updates
+      updateScrollProgress();
+      updateActiveSection();
+    }, 500); // Reduced from 1000ms to 500ms
+  }, [updateScrollProgress, updateActiveSection]);
 
   // Handle navigation clicks
   const handleNavClick = useCallback((e, href) => {
@@ -132,7 +165,10 @@ export function useScrollManager() {
       setIsMobileMenuOpen(false);
       document.body.style.overflow = '';
     }
-  }, [isMobileMenuOpen]);
+    
+    // Recalculate progress on resize
+    updateScrollProgress();
+  }, [isMobileMenuOpen, updateScrollProgress]);
 
   // Handle clicks outside mobile menu
   const handleDocumentClick = useCallback((e) => {
@@ -182,7 +218,8 @@ export function useScrollManager() {
     }
 
     // Initial scroll progress and header state
-    handleScroll();
+    updateScrollProgress();
+    updateActiveSection();
     updateHeaderEffects();
 
     // Cleanup function
@@ -198,7 +235,7 @@ export function useScrollManager() {
       // Reset body overflow
       document.body.style.overflow = '';
     };
-  }, [handleScroll, handleResize, handleDocumentClick, updateHeaderEffects, sections]);
+  }, [handleScroll, handleResize, handleDocumentClick, updateHeaderEffects, updateScrollProgress, updateActiveSection, sections]);
 
   return {
     activeSection,
