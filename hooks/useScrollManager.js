@@ -1,8 +1,8 @@
-// hooks/useScrollManager.js - UNIFIED SOLUTION
+// hooks/useScrollManager.js
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 export function useScrollManager() {
-  const [activeSection, setActiveSection] = useState('overview'); // Default to overview
+  const [activeSection, setActiveSection] = useState('overview');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
@@ -60,20 +60,16 @@ export function useScrollManager() {
     // Only update if section actually changed
     if (newActiveSection !== activeSection) {
       setActiveSection(newActiveSection);
-      console.log('🎯 Active section changed to:', newActiveSection);
     }
   }, [activeSection, sections]);
 
   // Smooth scroll to section with conflict prevention
   const scrollToSection = useCallback((sectionId) => {
-    console.log('🔗 Scrolling to section:', sectionId);
-    
     // Clean the section ID (remove # if present)
     const targetId = sectionId.startsWith('#') ? sectionId.slice(1) : sectionId;
     const target = document.getElementById(targetId);
     
     if (!target) {
-      console.log('❌ Target not found:', targetId);
       return;
     }
 
@@ -105,7 +101,6 @@ export function useScrollManager() {
     setTimeout(() => {
       document.documentElement.classList.remove('smooth-scroll');
       isNavigatingRef.current = false;
-      console.log('✅ Navigation complete to:', targetId);
     }, 1000);
   }, []);
 
@@ -127,7 +122,6 @@ export function useScrollManager() {
         document.body.style.overflow = '';
       }
       
-      console.log('📱 Mobile menu toggled:', newState);
       return newState;
     });
   }, []);
@@ -168,8 +162,6 @@ export function useScrollManager() {
 
   // Main effect - setup all event listeners
   useEffect(() => {
-    console.log('🚀 ScrollManager initialized');
-    
     // Combined scroll handler
     const scrollHandler = () => {
       handleScroll();
@@ -205,19 +197,8 @@ export function useScrollManager() {
       
       // Reset body overflow
       document.body.style.overflow = '';
-      
-      console.log('🧹 ScrollManager cleaned up');
     };
   }, [handleScroll, handleResize, handleDocumentClick, updateHeaderEffects, sections]);
-
-  // Debug logging effect
-  useEffect(() => {
-    console.log('📊 ScrollManager State:', {
-      activeSection,
-      scrollProgress: Math.round(scrollProgress),
-      isMobileMenuOpen
-    });
-  }, [activeSection, scrollProgress, isMobileMenuOpen]);
 
   return {
     activeSection,
