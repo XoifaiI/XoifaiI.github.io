@@ -22,6 +22,24 @@ export function useScrollManager() {
     'demo'
   ];
 
+  // Map sub-sections to their parent sections for header navigation
+  const sectionMapping = {
+    'overview': 'overview',
+    'installation': 'installation', 
+    'quick-start': 'installation', // Quick start is part of installation
+    'hashing': 'api-reference',
+    'encryption': 'api-reference',
+    'signatures': 'api-reference',
+    'utilities': 'api-reference',
+    'checksums': 'api-reference',
+    'demo': 'demo'
+  };
+
+  // Get the header-level section for the current active section
+  const getHeaderSection = useCallback((section) => {
+    return sectionMapping[section] || section;
+  }, []);
+
   // Simple, stable scroll progress calculation
   const updateScrollProgress = useCallback(() => {
     const scrollTop = window.pageYOffset;
@@ -89,7 +107,13 @@ export function useScrollManager() {
 
   // Smooth scroll to section with better navigation blocking
   const scrollToSection = useCallback((sectionId) => {
-    const targetId = sectionId.startsWith('#') ? sectionId.slice(1) : sectionId;
+    let targetId = sectionId.startsWith('#') ? sectionId.slice(1) : sectionId;
+    
+    // Handle header-level navigation - map to first sub-section
+    if (targetId === 'api-reference') {
+      targetId = 'hashing'; // Scroll to first API section
+    }
+    
     const target = document.getElementById(targetId);
     
     if (!target) return;
@@ -108,9 +132,10 @@ export function useScrollManager() {
     // Close mobile menu
     setIsMobileMenuOpen(false);
     
-    // Update URL
+    // Update URL - use original sectionId for header links
+    const urlHash = sectionId.startsWith('#') ? sectionId.slice(1) : sectionId;
     if (window.history?.pushState) {
-      window.history.pushState(null, null, `#${targetId}`);
+      window.history.pushState(null, null, `#${urlHash}`);
     }
     
     // Small delay to ensure the flag is set before scrolling starts
@@ -224,7 +249,8 @@ export function useScrollManager() {
   }, [handleResize, handleDocumentClick]); // Minimal dependencies
 
   return {
-    activeSection,
+    activeSection, // Detailed section for sidebar
+    headerSection: getHeaderSection(activeSection), // Mapped section for header
     scrollProgress,
     isMobileMenuOpen,
     toggleMobileMenu,
