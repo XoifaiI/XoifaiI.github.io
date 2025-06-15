@@ -4,11 +4,9 @@ import styles from './Sidebar.module.css';
 const Sidebar = memo(({ 
   sections, 
   activeSection, 
-  onNavClick,  // 👈 Navigation handler from useScrollManager
+  onNavClick,
   isMobileMenuOpen 
 }) => {
-  console.log('🎯 Sidebar render - activeSection:', activeSection);
-
   return (
     <aside 
       className={`${styles.sidebar} ${isMobileMenuOpen ? styles.mobileOpen : ''}`} 
@@ -21,8 +19,6 @@ const Sidebar = memo(({
           <nav className={styles.sidebarNav}>
             {section.items.map((item) => {
               const isActive = activeSection === item.href.slice(1);
-              console.log(`📋 Sidebar Item: ${item.label}, href: ${item.href}, activeSection: ${activeSection}, isActive: ${isActive}`);
-              
               return (
                 <a
                   key={item.href}
