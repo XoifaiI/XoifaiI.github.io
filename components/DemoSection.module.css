@@ -67,12 +67,16 @@
   margin: 0;
   line-height: 1.5;
   overflow-x: auto;
-  min-height: 60px;
+  min-height: auto; /* FIXED: Changed from 60px to auto */
   font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-all;
+  /* Ensure top alignment */
+  display: block;
+  text-align: left;
+  vertical-align: top;
 }
 
 .demoButtons {
