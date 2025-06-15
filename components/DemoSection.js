@@ -33,10 +33,10 @@ const DemoSection = memo(() => {
               id="hash-algorithm"
               className={styles.demoSelect}
             >
-              <option value="sha256">SHA256 (most secure)</option>
-              <option value="sha1">SHA1</option>
+              <option value="sha256">SHA256 (most popular)</option>
+              <option value="sha1">SHA1 (legacy)</option>
               <option value="md5">MD5 (legacy)</option>
-              <option value="sha512">SHA512</option>
+              <option value="sha512">SHA512 (most secure)</option>
             </select>
             <button 
               className="btn btn-primary" 
