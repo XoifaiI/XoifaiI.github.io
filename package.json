@@ -2,22 +2,42 @@
   "name": "luau-cryptography-docs",
   "version": "1.0.0",
   "private": true,
- "scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start",
-  "deploy": "npm run build && touch out/.nojekyll",
-  "lint": "next lint"
-},
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next build",
+    "deploy": "npm run build && touch out/.nojekyll",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
+  },
   "dependencies": {
-    "next": "14.0.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "next": "^15.0.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "prismjs": "^1.29.0",
-    "crypto-js": "^4.1.1"
+    "crypto-js": "^4.2.0"
   },
   "devDependencies": {
-    "eslint": "8.48.0",
-    "eslint-config-next": "14.0.0"
+    "eslint": "^9.14.0",
+    "eslint-config-next": "^15.0.3",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.14.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.3%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
