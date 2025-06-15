@@ -9,7 +9,6 @@ export function useScrollManager() {
   const isNavigatingRef = useRef(false);
   const lastScrollTimeRef = useRef(0);
   const timeoutRef = useRef(null);
-  const sectionUpdateTimeoutRef = useRef(null);
 
   // Define all possible sections in order
   const sections = [
@@ -45,73 +44,31 @@ export function useScrollManager() {
     document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
   }, []);
 
-  // Find and update active section with stable detection
+  // Find and update active section (simplified and stable)
   const updateActiveSection = useCallback(() => {
     const windowHeight = window.innerHeight;
-    const scrollTop = window.pageYOffset;
+    let newActiveSection = 'overview'; // Default fallback
     
-    // Use a more stable approach: find the section that occupies the most viewport space
-    let bestSection = 'overview';
-    let maxVisibleArea = 0;
-    
+    // Go through sections in order and find the first one that qualifies
+    // This prevents the "last one wins" fighting between adjacent sections
     for (const sectionId of sections) {
       const element = document.getElementById(sectionId);
       if (element) {
         const rect = element.getBoundingClientRect();
         
-        // Calculate visible area of this section
-        const visibleTop = Math.max(0, rect.top);
-        const visibleBottom = Math.min(windowHeight, rect.bottom);
-        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-        
-        // Only consider sections that are actually visible
-        if (visibleHeight > 0) {
-          // Bias towards sections in the upper portion of the viewport
-          const topBias = rect.top < windowHeight * 0.3 ? 1.5 : 1.0;
-          const adjustedArea = visibleHeight * topBias;
-          
-          if (adjustedArea > maxVisibleArea) {
-            maxVisibleArea = adjustedArea;
-            bestSection = sectionId;
-          }
+        // Section is active if it's in the top 40% of viewport and visible
+        if (rect.top <= windowHeight * 0.4 && rect.bottom >= 0) {
+          newActiveSection = sectionId;
+          break; // Stop at first match to prevent fighting
         }
       }
     }
     
-    // Add stability: only change if the new section has significantly more visible area
-    // OR if the current section is barely visible
-    const currentElement = document.getElementById(activeSection);
-    if (currentElement && bestSection !== activeSection) {
-      const currentRect = currentElement.getBoundingClientRect();
-      const currentVisibleTop = Math.max(0, currentRect.top);
-      const currentVisibleBottom = Math.min(windowHeight, currentRect.bottom);
-      const currentVisibleHeight = Math.max(0, currentVisibleBottom - currentVisibleTop);
-      
-      // If current section still has decent visibility, don't switch unless there's a big difference
-      if (currentVisibleHeight > windowHeight * 0.15) {
-        const threshold = currentVisibleHeight * 1.3; // Require 30% more visibility to switch
-        if (maxVisibleArea < threshold) {
-          return; // Stay with current section
-        }
-      }
-    }
-    
-    // Safe to switch to new section
-    if (bestSection !== activeSection) {
-      setActiveSection(bestSection);
+    // Only update if section actually changed
+    if (newActiveSection !== activeSection) {
+      setActiveSection(newActiveSection);
     }
   }, [activeSection, sections]);
-
-  // Debounced section update to prevent rapid switching
-  const debouncedUpdateActiveSection = useCallback(() => {
-    if (sectionUpdateTimeoutRef.current) {
-      clearTimeout(sectionUpdateTimeoutRef.current);
-    }
-    
-    sectionUpdateTimeoutRef.current = setTimeout(() => {
-      updateActiveSection();
-    }, 100); // 100ms debounce
-  }, [updateActiveSection]);
 
   // Throttled scroll handler for better performance
   const handleScroll = useCallback(() => {
@@ -124,9 +81,9 @@ export function useScrollManager() {
 
     // Only skip section detection during navigation to prevent conflicts
     if (!isNavigatingRef.current) {
-      debouncedUpdateActiveSection();
+      updateActiveSection();
     }
-  }, [updateScrollProgress, debouncedUpdateActiveSection]);
+  }, [updateScrollProgress, updateActiveSection]);
 
   // Smooth scroll to section with immediate progress update
   const scrollToSection = useCallback((sectionId) => {
@@ -279,14 +236,10 @@ export function useScrollManager() {
         clearTimeout(timeoutRef.current);
       }
       
-      if (sectionUpdateTimeoutRef.current) {
-        clearTimeout(sectionUpdateTimeoutRef.current);
-      }
-      
       // Reset body overflow
       document.body.style.overflow = '';
     };
-  }, [handleScroll, handleResize, handleDocumentClick, updateHeaderEffects, updateScrollProgress, updateActiveSection, debouncedUpdateActiveSection, sections]);
+  }, [handleScroll, handleResize, handleDocumentClick, updateHeaderEffects, updateScrollProgress, updateActiveSection, sections]);
 
   return {
     activeSection,
