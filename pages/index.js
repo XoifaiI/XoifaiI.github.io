@@ -16,7 +16,8 @@ import styles from '../styles/Home.module.css';
 export default function Home() {
   // Use all functions from useScrollManager
   const { 
-    activeSection, 
+    activeSection,      // Detailed section for sidebar
+    headerSection,      // Mapped section for header navigation  
     scrollProgress, 
     isMobileMenuOpen, 
     toggleMobileMenu, 
@@ -124,7 +125,7 @@ export default function Home() {
       <div className={styles.app}>
         <Header 
           navigationItems={navigationItems} 
-          activeSection={activeSection}
+          activeSection={headerSection}  {/* Use headerSection instead of activeSection */}
           scrollProgress={scrollProgress}
           onNavClick={handleNavClick}
           onMobileMenuToggle={toggleMobileMenu}
@@ -134,7 +135,7 @@ export default function Home() {
         <div className={styles.mainLayout}>
           <Sidebar 
             sections={sidebarSections} 
-            activeSection={activeSection}
+            activeSection={activeSection}  {/* Sidebar still uses detailed activeSection */}
             onNavClick={handleNavClick}
             isMobileMenuOpen={isMobileMenuOpen}
           />
