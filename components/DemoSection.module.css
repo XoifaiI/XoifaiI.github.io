@@ -41,7 +41,8 @@
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 1rem;
-  margin-top: 1.95rem; /* Label height + margin */
+  /* Align with the textarea (no algorithm label needed) */
+  margin-top: 1.45rem; /* Just account for input label */
 }
 
 .demoButtonsContainer label {
