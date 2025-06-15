@@ -125,7 +125,7 @@ export default function Home() {
       <div className={styles.app}>
         <Header 
           navigationItems={navigationItems} 
-          activeSection={headerSection}  {/* Use headerSection instead of activeSection */}
+          activeSection={headerSection}
           scrollProgress={scrollProgress}
           onNavClick={handleNavClick}
           onMobileMenuToggle={toggleMobileMenu}
@@ -135,7 +135,7 @@ export default function Home() {
         <div className={styles.mainLayout}>
           <Sidebar 
             sections={sidebarSections} 
-            activeSection={activeSection}  {/* Sidebar still uses detailed activeSection */}
+            activeSection={activeSection}
             onNavClick={handleNavClick}
             isMobileMenuOpen={isMobileMenuOpen}
           />
