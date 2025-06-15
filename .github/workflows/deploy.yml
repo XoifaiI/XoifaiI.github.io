@@ -17,7 +17,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x]
     
     steps:
       - name: Checkout repository
@@ -27,11 +27,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          # Removed cache until package-lock.json is available
           
       - name: Install dependencies
         run: |
-          npm ci --prefer-offline --no-audit --progress=false
+          npm install --prefer-offline --no-audit --progress=false
           
       - name: Lint code
         run: |
@@ -50,7 +50,6 @@ jobs:
         run: touch out/.nojekyll
         
       - name: Upload build artifacts
-        if: matrix.node-version == '20.x'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
@@ -86,10 +85,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
-          cache: 'npm'
           
       - name: Install dependencies
-        run: npm ci
+        run: npm install
         
       - name: Build for Lighthouse
         run: npm run build
