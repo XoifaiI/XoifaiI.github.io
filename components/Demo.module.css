@@ -73,6 +73,12 @@
   color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-all;
+
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .demoButtons {
@@ -120,7 +126,7 @@
   border-color: var(--accent);
 }
 
-/* Hash output styling - FIXED PADDING */
+/* Hash output styling - FIXED PADDING AND ALIGNMENT */
 .hashOutput {
   font-family: var(--font-mono);
   word-break: break-all;
@@ -131,6 +137,11 @@
   border-radius: 8px;
   margin: 1rem 0;
   min-height: auto;
+  /* Fix: Align content to top */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .hashLabel {
@@ -152,7 +163,7 @@
   padding: 0;
 }
 
-/* Base64 output styling - FIXED PADDING */
+/* Base64 output styling - FIXED PADDING AND ALIGNMENT */
 .base64Output {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -160,6 +171,11 @@
   padding: 1.25rem;
   margin: 1rem 0;
   min-height: auto;
+  /* Fix: Align content to top */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .base64Label {
