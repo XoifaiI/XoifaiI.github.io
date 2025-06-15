@@ -42,7 +42,17 @@ export function useScrollManager() {
   const updateActiveSection = useCallback(() => {
     if (isNavigatingRef.current) return; // Skip during navigation
     
+    const scrollTop = window.pageYOffset;
     const windowHeight = window.innerHeight;
+    
+    // Special case: if we're at the very top, always show overview
+    if (scrollTop < 50) {
+      if (activeSection !== 'overview') {
+        setActiveSection('overview');
+      }
+      return;
+    }
+    
     const triggerPoint = windowHeight * 0.3; // 30% down from top
     
     // Find the last section whose top is above the trigger point
