@@ -8,7 +8,7 @@ const DemoSection = memo(() => {
       <p className={styles.sectionDescription}>
         Try out the cryptographic functions right in your browser
       </p>
-
+      
       {/* Hash Functions Demo */}
       <div className={styles.demoSection}>
         <h3 className={styles.demoTitle}>
@@ -53,7 +53,7 @@ const DemoSection = memo(() => {
           </div>
         </div>
       </div>
-
+      
       {/* Base64 Encoder/Decoder Demo */}
       <div className={styles.demoSection}>
         <h3 className={styles.demoTitle}>
@@ -99,5 +99,4 @@ const DemoSection = memo(() => {
 });
 
 DemoSection.displayName = 'DemoSection';
-
 export default DemoSection;
