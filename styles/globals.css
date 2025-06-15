@@ -1,4 +1,3 @@
-/* Modern Next.js-Inspired Dark Theme - FIXED FOR POSITIONING */
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +5,6 @@
 }
 
 :root {
-  /* Next.js-inspired dark color palette */
   --bg-primary: #000000;
   --bg-secondary: #111111;
   --bg-tertiary: #1a1a1a;
@@ -77,10 +75,6 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
-  
-  /* REMOVED: transform: translateZ(0) and other problematic properties */
-  
-  /* CRITICAL: Account for FIXED header */
   padding-top: 70px;
   margin: 0;
   
@@ -89,7 +83,6 @@ body {
   min-height: 100vh;
 }
 
-/* Improve focus accessibility with modern styling */
 *:focus {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -100,7 +93,6 @@ body {
   outline: none;
 }
 
-/* Modern button styles - SAFE VERSION */
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -117,7 +109,6 @@ body {
   position: relative;
   overflow: hidden;
   
-  /* REMOVED: will-change and transform that break fixed positioning */
 }
 
 .btn::before {
@@ -177,7 +168,6 @@ body {
   font-size: 0.8rem;
   font-weight: 500;
   transition: all var(--transition-normal);
-  /* REMOVED: transform: translateZ(0) */
 }
 
 .copy-btn:hover {
@@ -188,13 +178,11 @@ body {
   transform: translateY(-1px);
 }
 
-/* Section highlighting - SAFE VERSION */
 section[id] {
   scroll-margin-top: 90px;
   transition: all var(--transition-slow);
   min-height: 150px;
   position: relative;
-  /* REMOVED: contain: layout style; - this breaks fixed positioning */
 }
 
 section[id].highlighted {
@@ -220,7 +208,6 @@ section[id].highlighted::before {
   transition: all var(--transition-slow);
   min-height: 100px;
   position: relative;
-  /* REMOVED: contain: layout style; - this breaks fixed positioning */
 }
 
 .api-category[id].highlighted {
@@ -245,7 +232,6 @@ pre[class*="language-"] {
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
-  /* REMOVED: contain and will-change properties */
 }
 
 code[class*="language-"] {
@@ -331,11 +317,9 @@ img {
 @keyframes sectionGlow {
   0% {
     opacity: 0.5;
-    /* REMOVED: transform: scale(1) - can break positioning */
   }
   100% {
     opacity: 1;
-    /* REMOVED: transform: scale(1.02) - can break positioning */
   }
 }
 
