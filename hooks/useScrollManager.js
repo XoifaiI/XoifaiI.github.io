@@ -9,6 +9,7 @@ export function useScrollManager() {
   const isNavigatingRef = useRef(false);
   const lastScrollTimeRef = useRef(0);
   const timeoutRef = useRef(null);
+  const sectionUpdateTimeoutRef = useRef(null);
 
   // Define all possible sections in order
   const sections = [
@@ -47,49 +48,70 @@ export function useScrollManager() {
   // Find and update active section with stable detection
   const updateActiveSection = useCallback(() => {
     const windowHeight = window.innerHeight;
-    const viewportCenter = windowHeight / 2;
-    let bestSection = 'overview'; // Default fallback
-    let bestDistance = Infinity;
+    const scrollTop = window.pageYOffset;
     
-    // Find the section closest to the viewport center
+    // Use a more stable approach: find the section that occupies the most viewport space
+    let bestSection = 'overview';
+    let maxVisibleArea = 0;
+    
     for (const sectionId of sections) {
       const element = document.getElementById(sectionId);
       if (element) {
         const rect = element.getBoundingClientRect();
         
-        // Skip sections that are completely out of view
-        if (rect.bottom < 0 || rect.top > windowHeight) continue;
+        // Calculate visible area of this section
+        const visibleTop = Math.max(0, rect.top);
+        const visibleBottom = Math.min(windowHeight, rect.bottom);
+        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
         
-        // Calculate distance from section center to viewport center
-        const sectionCenter = rect.top + (rect.height / 2);
-        const distance = Math.abs(sectionCenter - viewportCenter);
-        
-        // Use the closest section to viewport center
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          bestSection = sectionId;
+        // Only consider sections that are actually visible
+        if (visibleHeight > 0) {
+          // Bias towards sections in the upper portion of the viewport
+          const topBias = rect.top < windowHeight * 0.3 ? 1.5 : 1.0;
+          const adjustedArea = visibleHeight * topBias;
+          
+          if (adjustedArea > maxVisibleArea) {
+            maxVisibleArea = adjustedArea;
+            bestSection = sectionId;
+          }
         }
       }
     }
     
-    // Add hysteresis: only change if we're confident about the new section
-    // This prevents rapid switching between adjacent sections
-    if (bestSection !== activeSection) {
-      const currentElement = document.getElementById(activeSection);
-      if (currentElement) {
-        const currentRect = currentElement.getBoundingClientRect();
-        
-        // Stick with current section if it's still prominently visible
-        if (currentRect.top < windowHeight * 0.3 && currentRect.bottom > windowHeight * 0.2) {
-          // Current section is still well-positioned, don't switch yet
-          return;
+    // Add stability: only change if the new section has significantly more visible area
+    // OR if the current section is barely visible
+    const currentElement = document.getElementById(activeSection);
+    if (currentElement && bestSection !== activeSection) {
+      const currentRect = currentElement.getBoundingClientRect();
+      const currentVisibleTop = Math.max(0, currentRect.top);
+      const currentVisibleBottom = Math.min(windowHeight, currentRect.bottom);
+      const currentVisibleHeight = Math.max(0, currentVisibleBottom - currentVisibleTop);
+      
+      // If current section still has decent visibility, don't switch unless there's a big difference
+      if (currentVisibleHeight > windowHeight * 0.15) {
+        const threshold = currentVisibleHeight * 1.3; // Require 30% more visibility to switch
+        if (maxVisibleArea < threshold) {
+          return; // Stay with current section
         }
       }
-      
-      // Safe to switch to new section
+    }
+    
+    // Safe to switch to new section
+    if (bestSection !== activeSection) {
       setActiveSection(bestSection);
     }
   }, [activeSection, sections]);
+
+  // Debounced section update to prevent rapid switching
+  const debouncedUpdateActiveSection = useCallback(() => {
+    if (sectionUpdateTimeoutRef.current) {
+      clearTimeout(sectionUpdateTimeoutRef.current);
+    }
+    
+    sectionUpdateTimeoutRef.current = setTimeout(() => {
+      updateActiveSection();
+    }, 100); // 100ms debounce
+  }, [updateActiveSection]);
 
   // Throttled scroll handler for better performance
   const handleScroll = useCallback(() => {
@@ -102,9 +124,9 @@ export function useScrollManager() {
 
     // Only skip section detection during navigation to prevent conflicts
     if (!isNavigatingRef.current) {
-      updateActiveSection();
+      debouncedUpdateActiveSection();
     }
-  }, [updateScrollProgress, updateActiveSection]);
+  }, [updateScrollProgress, debouncedUpdateActiveSection]);
 
   // Smooth scroll to section with immediate progress update
   const scrollToSection = useCallback((sectionId) => {
@@ -257,10 +279,14 @@ export function useScrollManager() {
         clearTimeout(timeoutRef.current);
       }
       
+      if (sectionUpdateTimeoutRef.current) {
+        clearTimeout(sectionUpdateTimeoutRef.current);
+      }
+      
       // Reset body overflow
       document.body.style.overflow = '';
     };
-  }, [handleScroll, handleResize, handleDocumentClick, updateHeaderEffects, updateScrollProgress, updateActiveSection, sections]);
+  }, [handleScroll, handleResize, handleDocumentClick, updateHeaderEffects, updateScrollProgress, updateActiveSection, debouncedUpdateActiveSection, sections]);
 
   return {
     activeSection,
