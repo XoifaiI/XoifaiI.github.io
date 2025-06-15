@@ -1,3 +1,79 @@
+.codeSection {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.sectionDescription {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.demoInputContainer {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.inputGroup {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.demoButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.demoButtonsContainer label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.demoSelect {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.demoSelect:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
+}
+
+.demoControls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+
 .demoContainer {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -63,16 +139,24 @@
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1rem !important;
   margin: 0;
   line-height: 1.5;
   overflow-x: auto;
-  min-height: 60px;
+  min-height: auto !important;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-all;
+  /* AGGRESSIVE anti-centering */
+  display: block !important;
+  text-align: left !important;
+  vertical-align: top !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  align-content: flex-start !important;
+  box-sizing: border-box !important;
 }
 
 .demoButtons {
@@ -181,30 +265,6 @@
   padding: 0;
 }
 
-/* Grid layout for demo sections */
-.demoGrid {
-  display: grid;
-  grid-template-columns: 1fr 200px;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-.demoInputSection {
-  grid-column: 1;
-}
-
-.demoControls {
-  grid-column: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.demoOutputSection {
-  grid-column: 1 / -1;
-  margin-top: 1rem;
-}
-
 /* Responsive demo components */
 @media (max-width: 768px) {
   .demoContainer {
@@ -217,18 +277,12 @@
     margin-bottom: 1.5rem;
   }
   
-  .demoGrid {
+  .demoControls {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
   
-  .demoInputSection,
-  .demoControls,
-  .demoOutputSection {
-    grid-column: 1;
-  }
-  
-  .demoControls {
+  .demoButtonsContainer {
     flex-direction: row;
     flex-wrap: wrap;
   }
@@ -241,6 +295,13 @@
   .hashOutput,
   .base64Output {
     padding: 1rem;
+  }
+  
+  .demoOutput {
+    padding: 1rem !important;
+    min-height: auto !important;
+    display: block !important;
+    text-align: left !important;
   }
 }
 
@@ -262,10 +323,13 @@
   .hashOutput,
   .base64Output {
     font-size: 0.8rem;
-    padding: 0.75rem;
+    padding: 0.75rem !important;
+    min-height: auto !important;
+    display: block !important;
+    text-align: left !important;
   }
   
-  .demoControls {
+  .demoButtonsContainer {
     flex-direction: column;
   }
   
