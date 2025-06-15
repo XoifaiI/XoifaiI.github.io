@@ -65,8 +65,9 @@ export function useDemoHandlers() {
           hash = CryptoJS.SHA256(input).toString();
       }
 
+      // FIXED: Wrap content in a div with explicit top alignment
       output.innerHTML = `
-        <div style="display: block; text-align: left; vertical-align: top; padding: 0; margin: 0;">
+        <div style="display: block; text-align: left; vertical-align: top; padding: 0; margin: 0; line-height: 1.5;">
           <strong style="color: var(--accent)">${algorithm.toUpperCase()}:</strong><br>
           <span style="color: var(--success); word-break: break-all; font-family: monospace; font-size: 0.85rem;">
             ${hash}
@@ -93,8 +94,10 @@ export function useDemoHandlers() {
     try {
       // Handle UTF-8 encoding properly
       const encoded = btoa(unescape(encodeURIComponent(input)));
+      
+      // FIXED: Wrap content in a div with explicit top alignment
       output.innerHTML = `
-        <div style="display: block; text-align: left; vertical-align: top; padding: 0; margin: 0;">
+        <div style="display: block; text-align: left; vertical-align: top; padding: 0; margin: 0; line-height: 1.5;">
           <strong style="color: var(--accent)">Base64 Encoded:</strong><br>
           <span style="color: var(--success); word-break: break-all; font-family: monospace; font-size: 0.85rem;">
             ${encoded}
@@ -128,8 +131,10 @@ export function useDemoHandlers() {
       }
 
       const decoded = decodeURIComponent(escape(atob(cleanInput)));
+      
+      // FIXED: Wrap content in a div with explicit top alignment
       output.innerHTML = `
-        <div style="display: block; text-align: left; vertical-align: top; padding: 0; margin: 0;">
+        <div style="display: block; text-align: left; vertical-align: top; padding: 0; margin: 0; line-height: 1.5;">
           <strong style="color: var(--accent)">Decoded:</strong><br>
           <span style="color: var(--success); font-family: monospace; white-space: pre-wrap;">
             ${decoded}
