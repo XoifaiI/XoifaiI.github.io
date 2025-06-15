@@ -28,7 +28,12 @@ const DemoSection = memo(() => {
             </div>
           </div>
           <div className={styles.demoButtonsContainer}>
-            <label htmlFor="hash-algorithm">Algorithm:</label>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => window.performHash && window.performHash()}
+            >
+              <i className="fas fa-calculator" aria-hidden="true"></i> Calculate Hash
+            </button>
             <select 
               id="hash-algorithm"
               className={styles.demoSelect}
@@ -38,12 +43,6 @@ const DemoSection = memo(() => {
               <option value="md5">MD5 (legacy)</option>
               <option value="sha512">SHA512 (most secure)</option>
             </select>
-            <button 
-              className="btn btn-primary" 
-              onClick={() => window.performHash && window.performHash()}
-            >
-              <i className="fas fa-calculator" aria-hidden="true"></i> Calculate Hash
-            </button>
           </div>
         </div>
         <div className={styles.inputGroup}>
