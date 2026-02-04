@@ -25,11 +25,11 @@ const edges = [
 
 const verticalNodes = (s, dark) => [
   { id: 'm', position: { x: 0, y: 0 }, data: { label: 'Message' }, style: s(dark ? '#6366f1' : '#818cf8'), sourcePosition: Position.Bottom },
-  { id: 'k', position: { x: 140, y: 0 }, data: { label: 'Secret Key' }, style: s(dark ? '#22c55e' : '#4ade80'), sourcePosition: Position.Bottom },
+  { id: 'k', position: { x: 160, y: 0 }, data: { label: 'Secret Key' }, style: s(dark ? '#22c55e' : '#4ade80'), sourcePosition: Position.Bottom },
   { id: 'h', position: { x: 50, y: 80 }, data: { label: 'HMAC' }, style: s(dark ? '#8b5cf6' : '#a78bfa'), targetPosition: Position.Top, sourcePosition: Position.Bottom },
   { id: 'mac', position: { x: 50, y: 160 }, data: { label: 'MAC Tag' }, style: s(dark ? '#f59e0b' : '#fbbf24'), targetPosition: Position.Top, sourcePosition: Position.Bottom },
   { id: 'm2', position: { x: 0, y: 240 }, data: { label: 'Message' }, style: s(dark ? '#6366f1' : '#818cf8'), sourcePosition: Position.Bottom },
-  { id: 'k2', position: { x: 140, y: 240 }, data: { label: 'Secret Key' }, style: s(dark ? '#22c55e' : '#4ade80'), sourcePosition: Position.Bottom },
+  { id: 'k2', position: { x: 160, y: 240 }, data: { label: 'Secret Key' }, style: s(dark ? '#22c55e' : '#4ade80'), sourcePosition: Position.Bottom },
   { id: 'v', position: { x: 50, y: 320 }, data: { label: 'Verify' }, style: s(dark ? '#8b5cf6' : '#a78bfa'), targetPosition: Position.Top, sourcePosition: Position.Bottom },
   { id: 'valid', position: { x: 50, y: 400 }, data: { label: 'Valid' }, style: s(dark ? '#16a34a' : '#22c55e'), targetPosition: Position.Top },
 ];
