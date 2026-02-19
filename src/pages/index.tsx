@@ -92,7 +92,7 @@ function AlgorithmsSection() {
             <li>SHA 224/256/384/512</li>
             <li>SHA3 224/256/384/512</li>
             <li>BLAKE2b, BLAKE3</li>
-            <li>HMAC, KMAC</li>
+            <li>HMAC, HKDF, KMAC</li>
           </ul>
         </div>
         <div className="algorithm-category">
